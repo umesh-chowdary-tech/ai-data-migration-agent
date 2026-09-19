@@ -14,7 +14,7 @@ from dataclasses import dataclass, field
 
 from ..schema import Field, TargetSchema, norm
 from . import policy
-from .llm import LLM, AIResult, dig
+from .llm import LLM, UNTRUSTED, AIResult, dig
 from .profile import ColumnProfile, value_score
 
 
@@ -79,9 +79,10 @@ def _conflicts(field_name: str, claimed: set[str], schema: TargetSchema) -> bool
 
 
 def ask_llm(llm: LLM, file: str, profiles: list[ColumnProfile], schema: TargetSchema) -> tuple[dict[str, dict] | None, AIResult]:
-    system =("You map columns from a client's legacy HR export to a target HR schema. For each source column pick "
+    system = ("You map columns from a client's legacy HR export to a target HR schema. For each source column pick "
               "the single best target field, or null if none fits. Judge by header AND sample values. Give a "
-              "confidence 0-1 that reflects real ambiguity (use <0.7 when two fields are plausible).")
+              "confidence 0-1 that reflects real ambiguity (use <0.7 when two fields are plausible). "
+              + UNTRUSTED)
     user = json.dumps({
         "file": file,
         "target_fields": schema.describe_for_llm(),

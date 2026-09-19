@@ -91,9 +91,12 @@ def profile_column(file: str, name: str, series: pd.Series, schema: TargetSchema
                             for a, tok, t in zip(alpha, name_tokens, texts)]),
         "text": _frac([bool(re.fullmatch(r"[A-Za-z][A-Za-z &/,.'()\-]{2,}", t)) and "@" not in t for t in texts]),
     }
-    for f in schema.fields.values():
-        if f.type == "enum":
-            prof.features[f"enum:{f.name}"] = _frac([clean.enum_match(f, t)[0] is not None for t in texts])
+    enum_fields = [f for f in schema.fields.values() if f.type == "enum"]
+    hits = {f.name: [clean.enum_match(f, t)[0] is not None for t in texts] for f in enum_fields}
+    for name, flags in hits.items():
+        prof.features[f"enum:{name}"] = _frac(flags)
+    # Values that are known category words ("Intern", "Full-Time", "Active") are not people's names.
+    prof.features["enum_any"] = _frac([any(h[k] for h in hits.values()) for k in range(len(texts))])
     return prof
 
 
@@ -106,9 +109,11 @@ def value_score(prof: ColumnProfile, f: Field) -> tuple[float, str]:
     if f.type == "id":
         return ft["id_like"], f"{pct(ft['id_like'])} of values look like employee codes"
     if f.type == "name":
-        return ft["single_name"], f"{pct(ft['single_name'])} of values look like a single name"
+        s = ft["single_name"] * (1 - ft.get("enum_any", 0.0))
+        return s, f"{pct(s)} of values look like a single name"
     if f.type == "full_name":
-        return ft["full_name"], f"{pct(ft['full_name'])} of values look like full names"
+        s = ft["full_name"] * (1 - ft.get("enum_any", 0.0))
+        return s, f"{pct(s)} of values look like full names"
     if f.type == "email":
         if f.email_kind == "work":
             s = ft["email"] * ft["company_email"]

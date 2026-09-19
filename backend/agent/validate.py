@@ -16,6 +16,7 @@ from . import clean, rules
 from .records import Record
 
 PHONE_RE = re.compile(r"^\+91[6-9]\d{9}$")
+NAME_RE = re.compile(r"^[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ .'\-]*$")   # a person's name - not a sentence, formula or instruction
 FREE_MAIL = ("gmail.", "yahoo.", "outlook.", "hotmail.", "rediffmail.", "icloud.", "proton")
 
 
@@ -45,6 +46,10 @@ def field_issues(name: str, v: Any, schema: TargetSchema) -> list[Issue]:
         return issues
     if f.pattern and not re.fullmatch(f.pattern, str(v)):
         issues.append(Issue(name, "pattern", f"{f.label} '{v}' doesn't match the required format"))
+    if f.type == "name":
+        s = str(v)
+        if len(s) > 40 or len(s.split()) > 4 or not NAME_RE.match(s):
+            issues.append(Issue(name, "suspicious_name", f"{f.label} '{s[:40]}' doesn't look like a person's name"))
     if f.type == "email":
         s = str(v)
         if not clean.EMAIL_STRICT.match(s):

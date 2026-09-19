@@ -1,0 +1,191 @@
+[
+ {
+  "file": "test_concurrency",
+  "name": "test_back_to_back_column_decisions",
+  "label": "Back to back column decisions",
+  "outcome": "pass",
+  "seconds": 8.098
+ },
+ {
+  "file": "test_concurrency",
+  "name": "test_second_fix_lands_before_push",
+  "label": "Second fix lands before push",
+  "outcome": "pass",
+  "seconds": 5.363
+ },
+ {
+  "file": "test_end_to_end",
+  "name": "test_full_migration_then_delta",
+  "label": "Full migration then delta",
+  "outcome": "pass",
+  "seconds": 11.138
+ },
+ {
+  "file": "test_llm_boundary",
+  "name": "test_llm_cannot_override_boundary",
+  "label": "LLM cannot override boundary",
+  "outcome": "pass",
+  "seconds": 5.238
+ },
+ {
+  "file": "test_llm_fallback",
+  "name": "test_primary_down_secondary_answers",
+  "label": "Primary down secondary answers",
+  "outcome": "pass",
+  "seconds": 1.159
+ },
+ {
+  "file": "test_llm_fallback",
+  "name": "test_failed_provider_is_skipped_during_cooldown",
+  "label": "Failed provider is skipped during cooldown",
+  "outcome": "pass",
+  "seconds": 0.045
+ },
+ {
+  "file": "test_llm_fallback",
+  "name": "test_garbage_output_falls_back",
+  "label": "Garbage output falls back",
+  "outcome": "pass",
+  "seconds": 0.022
+ },
+ {
+  "file": "test_llm_fallback",
+  "name": "test_json_generation_failure_is_one_off_not_an_outage",
+  "label": "JSON generation failure is one off not an outage",
+  "outcome": "pass",
+  "seconds": 0.033
+ },
+ {
+  "file": "test_llm_fallback",
+  "name": "test_invalid_model_400_is_treated_as_model_problem",
+  "label": "Invalid model 400 is treated as model problem",
+  "outcome": "pass",
+  "seconds": 0.022
+ },
+ {
+  "file": "test_llm_fallback",
+  "name": "test_answer_nested_in_prompt_echo_is_found",
+  "label": "Answer nested in prompt echo is found",
+  "outcome": "pass",
+  "seconds": 0.022
+ },
+ {
+  "file": "test_llm_fallback",
+  "name": "test_both_down_means_no_ai",
+  "label": "Both down means no AI",
+  "outcome": "pass",
+  "seconds": 0.025
+ },
+ {
+  "file": "test_llm_fallback",
+  "name": "test_recheck_recovers",
+  "label": "Recheck recovers",
+  "outcome": "pass",
+  "seconds": 0.034
+ },
+ {
+  "file": "test_llm_fallback",
+  "name": "test_run_without_any_ai_still_completes_and_says_so",
+  "label": "Run without any AI still completes and says so",
+  "outcome": "pass",
+  "seconds": 1.489
+ },
+ {
+  "file": "test_llm_fallback",
+  "name": "test_run_with_fallback_records_who_answered",
+  "label": "Run with fallback records who answered",
+  "outcome": "pass",
+  "seconds": 1.478
+ },
+ {
+  "file": "test_resilience",
+  "name": "test_transient_503s_are_retried_automatically",
+  "label": "Transient 503s are retried automatically",
+  "outcome": "pass",
+  "seconds": 5.155
+ },
+ {
+  "file": "test_resilience",
+  "name": "test_target_outage_fails_safely_and_retry_recovers",
+  "label": "Target outage fails safely and retry recovers",
+  "outcome": "pass",
+  "seconds": 7.318
+ },
+ {
+  "file": "test_security",
+  "name": "test_conflict_value_must_be_one_of_the_offered_options",
+  "label": "Conflict value must be one of the offered options",
+  "outcome": "pass",
+  "seconds": 4.968
+ },
+ {
+  "file": "test_security",
+  "name": "test_correction_cannot_change_fields_the_card_did_not_offer",
+  "label": "Correction cannot change fields the card did not offer",
+  "outcome": "pass",
+  "seconds": 5.269
+ },
+ {
+  "file": "test_security",
+  "name": "test_skip_is_only_accepted_where_it_was_offered",
+  "label": "Skip is only accepted where it was offered",
+  "outcome": "pass",
+  "seconds": 5.14
+ },
+ {
+  "file": "test_security",
+  "name": "test_a_decision_cannot_be_applied_twice",
+  "label": "A decision cannot be applied twice",
+  "outcome": "pass",
+  "seconds": 2.012
+ },
+ {
+  "file": "test_security",
+  "name": "test_prompt_injection_in_headers_and_cells_cannot_steer_the_migration",
+  "label": "Prompt injection in headers and cells cannot steer the migration",
+  "outcome": "pass",
+  "seconds": 7.559
+ },
+ {
+  "file": "test_security",
+  "name": "test_ai_answers_outside_the_schema_are_ignored",
+  "label": "AI answers outside the schema are ignored",
+  "outcome": "pass",
+  "seconds": 0.066
+ },
+ {
+  "file": "test_security",
+  "name": "test_spreadsheet_formulas_in_client_data_are_held_for_review",
+  "label": "Spreadsheet formulas in client data are held for review",
+  "outcome": "pass",
+  "seconds": 5.416
+ },
+ {
+  "file": "test_security",
+  "name": "test_audit_csv_export_neutralises_formulas",
+  "label": "Audit CSV export neutralises formulas",
+  "outcome": "pass",
+  "seconds": 1.716
+ },
+ {
+  "file": "test_security",
+  "name": "test_xml_bomb_excel_file_is_rejected_and_the_run_continues",
+  "label": "XML bomb excel file is rejected and the run continues",
+  "outcome": "pass",
+  "seconds": 1.215
+ },
+ {
+  "file": "test_security",
+  "name": "test_upload_paths_are_confined_to_the_run_folder",
+  "label": "Upload paths are confined to the run folder",
+  "outcome": "pass",
+  "seconds": 0.463
+ },
+ {
+  "file": "test_security",
+  "name": "test_uploads_are_type_and_size_limited",
+  "label": "Uploads are type and size limited",
+  "outcome": "pass",
+  "seconds": 0.04
+ }
+]

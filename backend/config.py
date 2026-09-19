@@ -54,6 +54,10 @@ LLM_TIMEOUT = float(os.getenv("LLM_TIMEOUT", "30"))
 LLM_RETRY_TRANSIENT_AFTER = float(os.getenv("LLM_RETRY_TRANSIENT_AFTER", "60"))    # 429 / 5xx / timeouts
 LLM_RETRY_PERMANENT_AFTER = float(os.getenv("LLM_RETRY_PERMANENT_AFTER", "900"))   # bad key / model gone
 
+# Upload limits (per file / per run)
+MAX_UPLOAD_BYTES = int(float(os.getenv("MAX_UPLOAD_MB", "20")) * 2**20)
+MAX_UPLOAD_FILES = int(os.getenv("MAX_UPLOAD_FILES", "20"))
+
 # Slows the agent down slightly so a human can actually watch it work in the UI (seconds per step).
 STEP_DELAY = float(os.getenv("AGENT_STEP_DELAY", "0.35"))
 PUSH_DELAY = float(os.getenv("AGENT_PUSH_DELAY", "0.04"))

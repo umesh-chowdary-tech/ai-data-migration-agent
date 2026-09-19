@@ -26,6 +26,7 @@ policy.PUSH_BACKOFF_SECONDS = 0
 def isolated(monkeypatch):
     db.init()
     db.reset_all()
+    shutil.rmtree(TMP / "runs", ignore_errors=True)  # run ids restart at 1, so old upload folders must go too
     client = TestClient(mock_app)
     client.post("/admin/reset")
     monkeypatch.setattr(target, "factory", lambda: target.TargetClient(client))

@@ -1,0 +1,873 @@
+{
+ "mode": "ai",
+ "ai_status": {
+  "mode": "ai",
+  "label": "openai/gpt-oss-120b via Groq",
+  "available": true,
+  "active": "groq",
+  "reason": null,
+  "providers": [
+   {
+    "name": "groq",
+    "label": "Groq",
+    "model": "openai/gpt-oss-120b",
+    "status": "ok",
+    "configured": true,
+    "error": null,
+    "error_kind": null,
+    "checked_at": 1789806641.4701262,
+    "calls": 0,
+    "failures": 0,
+    "retry_in": 0
+   },
+   {
+    "name": "openrouter",
+    "label": "OpenRouter",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "status": "ok",
+    "configured": true,
+    "error": null,
+    "error_kind": null,
+    "checked_at": 1789806643.2472532,
+    "calls": 0,
+    "failures": 0,
+    "retry_in": 0
+   }
+  ]
+ },
+ "datasets": [
+  {
+   "name": "canonical",
+   "v1": {
+    "employees": 58,
+    "questions": 12,
+    "decisions": 12,
+    "tp": 12,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [
+     {
+      "kind": "exact duplicate row merged",
+      "ok": true
+     },
+     {
+      "kind": "same name, different birth date kept apart",
+      "ok": true
+     },
+     {
+      "kind": "email comma typo repaired on 2nd attempt",
+      "ok": true
+     },
+     {
+      "kind": "invalid value loses to the valid one from another file",
+      "ok": true
+     },
+     {
+      "kind": "placeholder phones (N/A, -, blank) treated as empty",
+      "ok": true
+     },
+     {
+      "kind": "messy name casing / whitespace",
+      "ok": true
+     },
+     {
+      "kind": "email casing / trailing spaces",
+      "ok": true
+     },
+     {
+      "kind": "column with no target field left out",
+      "ok": true
+     }
+    ],
+    "columns": {
+     "total": 28,
+     "auto": 27,
+     "auto_wrong": [],
+     "asked": 1
+    },
+    "fields_total": 928,
+    "fields_correct": 928,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 9,
+     "wrong": 1,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 524,
+    "ai_calls": 4,
+    "ai_used": {
+     "openai/gpt-oss-120b via Groq": 4
+    },
+    "ai_failures": 0,
+    "push_retries": 6,
+    "seconds": 14.3
+   },
+   "v2": {
+    "employees": 60,
+    "questions": 1,
+    "decisions": 1,
+    "tp": 1,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [],
+    "columns": {
+     "total": 28,
+     "auto": 28,
+     "auto_wrong": [],
+     "asked": 0
+    },
+    "fields_total": 960,
+    "fields_correct": 960,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 1,
+     "wrong": 0,
+     "none": 0
+    },
+    "unanswerable": [],
+    "auto_actions": 548,
+    "ai_calls": 4,
+    "ai_used": {
+     "openai/gpt-oss-120b via Groq": 2,
+     "meta-llama/llama-3.3-70b-instruct via OpenRouter": 2
+    },
+    "ai_failures": 1,
+    "push_retries": 0,
+    "seconds": 21.6,
+    "delta": {
+     "update_expected": [
+      "EMP0010",
+      "EMP0020",
+      "EMP0033"
+     ],
+     "update_actual": [
+      "EMP0010",
+      "EMP0020",
+      "EMP0033"
+     ],
+     "create_expected": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "create_actual": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "unchanged": 55,
+     "ok": true
+    },
+    "repeat_questions": []
+   },
+   "rollback": {
+    "ok": true,
+    "differences": []
+   }
+  },
+  {
+   "name": "final-1",
+   "v1": {
+    "employees": 58,
+    "questions": 12,
+    "decisions": 12,
+    "tp": 12,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [
+     {
+      "kind": "exact duplicate row merged",
+      "ok": true
+     },
+     {
+      "kind": "same name, different birth date kept apart",
+      "ok": true
+     },
+     {
+      "kind": "email comma typo repaired on 2nd attempt",
+      "ok": true
+     },
+     {
+      "kind": "invalid value loses to the valid one from another file",
+      "ok": true
+     },
+     {
+      "kind": "placeholder phones (N/A, -, blank) treated as empty",
+      "ok": true
+     },
+     {
+      "kind": "messy name casing / whitespace",
+      "ok": true
+     },
+     {
+      "kind": "email casing / trailing spaces",
+      "ok": true
+     },
+     {
+      "kind": "column with no target field left out",
+      "ok": true
+     }
+    ],
+    "columns": {
+     "total": 28,
+     "auto": 27,
+     "auto_wrong": [],
+     "asked": 1
+    },
+    "fields_total": 928,
+    "fields_correct": 928,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 9,
+     "wrong": 1,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 533,
+    "ai_calls": 4,
+    "ai_used": {
+     "meta-llama/llama-3.3-70b-instruct via OpenRouter": 2,
+     "openai/gpt-oss-120b via Groq": 2
+    },
+    "ai_failures": 0,
+    "push_retries": 6,
+    "seconds": 56.8
+   },
+   "v2": {
+    "employees": 60,
+    "questions": 1,
+    "decisions": 1,
+    "tp": 1,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [],
+    "columns": {
+     "total": 28,
+     "auto": 28,
+     "auto_wrong": [],
+     "asked": 0
+    },
+    "fields_total": 960,
+    "fields_correct": 960,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 1,
+     "wrong": 0,
+     "none": 0
+    },
+    "unanswerable": [],
+    "auto_actions": 557,
+    "ai_calls": 4,
+    "ai_used": {
+     "openai/gpt-oss-120b via Groq": 4
+    },
+    "ai_failures": 0,
+    "push_retries": 0,
+    "seconds": 12.2,
+    "delta": {
+     "update_expected": [
+      "EMP0010",
+      "EMP0025",
+      "EMP0042"
+     ],
+     "update_actual": [
+      "EMP0010",
+      "EMP0025",
+      "EMP0042"
+     ],
+     "create_expected": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "create_actual": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "unchanged": 55,
+     "ok": true
+    },
+    "repeat_questions": []
+   },
+   "rollback": {
+    "ok": true,
+    "differences": []
+   }
+  },
+  {
+   "name": "final-2",
+   "v1": {
+    "employees": 58,
+    "questions": 13,
+    "decisions": 13,
+    "tp": 12,
+    "fp": [
+     "mapping: hrms_legacy_export.csv|Cell Phone - Where should column 'Cell Phone' go?"
+    ],
+    "fn": [],
+    "precision": 0.923,
+    "recall": 1.0,
+    "traps": [
+     {
+      "kind": "exact duplicate row merged",
+      "ok": true
+     },
+     {
+      "kind": "same name, different birth date kept apart",
+      "ok": true
+     },
+     {
+      "kind": "email comma typo repaired on 2nd attempt",
+      "ok": true
+     },
+     {
+      "kind": "invalid value loses to the valid one from another file",
+      "ok": true
+     },
+     {
+      "kind": "placeholder phones (N/A, -, blank) treated as empty",
+      "ok": true
+     },
+     {
+      "kind": "messy name casing / whitespace",
+      "ok": true
+     },
+     {
+      "kind": "email casing / trailing spaces",
+      "ok": true
+     },
+     {
+      "kind": "column with no target field left out",
+      "ok": true
+     }
+    ],
+    "columns": {
+     "total": 28,
+     "auto": 26,
+     "auto_wrong": [],
+     "asked": 2
+    },
+    "fields_total": 928,
+    "fields_correct": 928,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 11,
+     "wrong": 1,
+     "none": 0
+    },
+    "unanswerable": [],
+    "auto_actions": 523,
+    "ai_calls": 4,
+    "ai_used": {
+     "openai/gpt-oss-120b via Groq": 1,
+     "meta-llama/llama-3.3-70b-instruct via OpenRouter": 3
+    },
+    "ai_failures": 1,
+    "push_retries": 6,
+    "seconds": 42.5
+   },
+   "v2": {
+    "employees": 60,
+    "questions": 1,
+    "decisions": 1,
+    "tp": 1,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [],
+    "columns": {
+     "total": 28,
+     "auto": 28,
+     "auto_wrong": [],
+     "asked": 0
+    },
+    "fields_total": 960,
+    "fields_correct": 960,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 1,
+     "wrong": 0,
+     "none": 0
+    },
+    "unanswerable": [],
+    "auto_actions": 549,
+    "ai_calls": 4,
+    "ai_used": {
+     "meta-llama/llama-3.3-70b-instruct via OpenRouter": 1,
+     "openai/gpt-oss-120b via Groq": 3
+    },
+    "ai_failures": 0,
+    "push_retries": 0,
+    "seconds": 35.7,
+    "delta": {
+     "update_expected": [
+      "EMP0023",
+      "EMP0041",
+      "EMP0048"
+     ],
+     "update_actual": [
+      "EMP0023",
+      "EMP0041",
+      "EMP0048"
+     ],
+     "create_expected": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "create_actual": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "unchanged": 55,
+     "ok": true
+    },
+    "repeat_questions": []
+   },
+   "rollback": {
+    "ok": true,
+    "differences": []
+   }
+  },
+  {
+   "name": "final-3",
+   "v1": {
+    "employees": 58,
+    "questions": 13,
+    "decisions": 13,
+    "tp": 12,
+    "fp": [
+     "mapping: hrms_legacy_export.csv|Cell Phone - Where should column 'Cell Phone' go?"
+    ],
+    "fn": [],
+    "precision": 0.923,
+    "recall": 1.0,
+    "traps": [
+     {
+      "kind": "exact duplicate row merged",
+      "ok": true
+     },
+     {
+      "kind": "same name, different birth date kept apart",
+      "ok": true
+     },
+     {
+      "kind": "email comma typo repaired on 2nd attempt",
+      "ok": true
+     },
+     {
+      "kind": "invalid value loses to the valid one from another file",
+      "ok": true
+     },
+     {
+      "kind": "placeholder phones (N/A, -, blank) treated as empty",
+      "ok": true
+     },
+     {
+      "kind": "messy name casing / whitespace",
+      "ok": true
+     },
+     {
+      "kind": "email casing / trailing spaces",
+      "ok": true
+     },
+     {
+      "kind": "column with no target field left out",
+      "ok": true
+     }
+    ],
+    "columns": {
+     "total": 28,
+     "auto": 26,
+     "auto_wrong": [],
+     "asked": 2
+    },
+    "fields_total": 928,
+    "fields_correct": 928,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 11,
+     "wrong": 1,
+     "none": 0
+    },
+    "unanswerable": [],
+    "auto_actions": 530,
+    "ai_calls": 4,
+    "ai_used": {
+     "openai/gpt-oss-120b via Groq": 1,
+     "meta-llama/llama-3.3-70b-instruct via OpenRouter": 3
+    },
+    "ai_failures": 1,
+    "push_retries": 6,
+    "seconds": 33.0
+   },
+   "v2": {
+    "employees": 60,
+    "questions": 1,
+    "decisions": 1,
+    "tp": 1,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [],
+    "columns": {
+     "total": 28,
+     "auto": 28,
+     "auto_wrong": [],
+     "asked": 0
+    },
+    "fields_total": 960,
+    "fields_correct": 960,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 1,
+     "wrong": 0,
+     "none": 0
+    },
+    "unanswerable": [],
+    "auto_actions": 555,
+    "ai_calls": 4,
+    "ai_used": {
+     "meta-llama/llama-3.3-70b-instruct via OpenRouter": 2,
+     "openai/gpt-oss-120b via Groq": 2
+    },
+    "ai_failures": 0,
+    "push_retries": 0,
+    "seconds": 36.7,
+    "delta": {
+     "update_expected": [
+      "EMP0011",
+      "EMP0023",
+      "EMP0035"
+     ],
+     "update_actual": [
+      "EMP0011",
+      "EMP0023",
+      "EMP0035"
+     ],
+     "create_expected": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "create_actual": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "unchanged": 55,
+     "ok": true
+    },
+    "repeat_questions": []
+   },
+   "rollback": {
+    "ok": true,
+    "differences": []
+   }
+  },
+  {
+   "name": "final-4",
+   "v1": {
+    "employees": 58,
+    "questions": 12,
+    "decisions": 12,
+    "tp": 12,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [
+     {
+      "kind": "exact duplicate row merged",
+      "ok": true
+     },
+     {
+      "kind": "same name, different birth date kept apart",
+      "ok": true
+     },
+     {
+      "kind": "email comma typo repaired on 2nd attempt",
+      "ok": true
+     },
+     {
+      "kind": "invalid value loses to the valid one from another file",
+      "ok": true
+     },
+     {
+      "kind": "placeholder phones (N/A, -, blank) treated as empty",
+      "ok": true
+     },
+     {
+      "kind": "messy name casing / whitespace",
+      "ok": true
+     },
+     {
+      "kind": "email casing / trailing spaces",
+      "ok": true
+     },
+     {
+      "kind": "column with no target field left out",
+      "ok": true
+     }
+    ],
+    "columns": {
+     "total": 28,
+     "auto": 27,
+     "auto_wrong": [],
+     "asked": 1
+    },
+    "fields_total": 928,
+    "fields_correct": 928,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 9,
+     "wrong": 1,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 519,
+    "ai_calls": 4,
+    "ai_used": {
+     "openai/gpt-oss-120b via Groq": 4
+    },
+    "ai_failures": 0,
+    "push_retries": 6,
+    "seconds": 13.6
+   },
+   "v2": {
+    "employees": 60,
+    "questions": 1,
+    "decisions": 1,
+    "tp": 1,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [],
+    "columns": {
+     "total": 28,
+     "auto": 28,
+     "auto_wrong": [],
+     "asked": 0
+    },
+    "fields_total": 960,
+    "fields_correct": 960,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 1,
+     "wrong": 0,
+     "none": 0
+    },
+    "unanswerable": [],
+    "auto_actions": 543,
+    "ai_calls": 4,
+    "ai_used": {
+     "meta-llama/llama-3.3-70b-instruct via OpenRouter": 4
+    },
+    "ai_failures": 1,
+    "push_retries": 0,
+    "seconds": 43.3,
+    "delta": {
+     "update_expected": [
+      "EMP0007",
+      "EMP0010",
+      "EMP0036"
+     ],
+     "update_actual": [
+      "EMP0007",
+      "EMP0010",
+      "EMP0036"
+     ],
+     "create_expected": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "create_actual": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "unchanged": 55,
+     "ok": true
+    },
+    "repeat_questions": []
+   },
+   "rollback": {
+    "ok": true,
+    "differences": []
+   }
+  },
+  {
+   "name": "final-5",
+   "v1": {
+    "employees": 58,
+    "questions": 12,
+    "decisions": 12,
+    "tp": 12,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [
+     {
+      "kind": "exact duplicate row merged",
+      "ok": true
+     },
+     {
+      "kind": "same name, different birth date kept apart",
+      "ok": true
+     },
+     {
+      "kind": "email comma typo repaired on 2nd attempt",
+      "ok": true
+     },
+     {
+      "kind": "invalid value loses to the valid one from another file",
+      "ok": true
+     },
+     {
+      "kind": "placeholder phones (N/A, -, blank) treated as empty",
+      "ok": true
+     },
+     {
+      "kind": "messy name casing / whitespace",
+      "ok": true
+     },
+     {
+      "kind": "email casing / trailing spaces",
+      "ok": true
+     },
+     {
+      "kind": "column with no target field left out",
+      "ok": true
+     }
+    ],
+    "columns": {
+     "total": 28,
+     "auto": 27,
+     "auto_wrong": [],
+     "asked": 1
+    },
+    "fields_total": 928,
+    "fields_correct": 928,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 8,
+     "wrong": 2,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 516,
+    "ai_calls": 4,
+    "ai_used": {
+     "meta-llama/llama-3.3-70b-instruct via OpenRouter": 2,
+     "openai/gpt-oss-120b via Groq": 2
+    },
+    "ai_failures": 0,
+    "push_retries": 6,
+    "seconds": 30.7
+   },
+   "v2": {
+    "employees": 60,
+    "questions": 1,
+    "decisions": 1,
+    "tp": 1,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [],
+    "columns": {
+     "total": 28,
+     "auto": 28,
+     "auto_wrong": [],
+     "asked": 0
+    },
+    "fields_total": 960,
+    "fields_correct": 960,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 1,
+     "wrong": 0,
+     "none": 0
+    },
+    "unanswerable": [],
+    "auto_actions": 542,
+    "ai_calls": 4,
+    "ai_used": {
+     "openai/gpt-oss-120b via Groq": 4
+    },
+    "ai_failures": 0,
+    "push_retries": 0,
+    "seconds": 12.7,
+    "delta": {
+     "update_expected": [
+      "EMP0008",
+      "EMP0010",
+      "EMP0038"
+     ],
+     "update_actual": [
+      "EMP0008",
+      "EMP0010",
+      "EMP0038"
+     ],
+     "create_expected": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "create_actual": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "unchanged": 55,
+     "ok": true
+    },
+    "repeat_questions": []
+   },
+   "rollback": {
+    "ok": true,
+    "differences": []
+   }
+  }
+ ]
+}

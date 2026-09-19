@@ -1,0 +1,2145 @@
+{
+ "mode": "rules-only",
+ "ai_status": {
+  "mode": "none",
+  "label": "No AI involved - rules-only mode",
+  "available": false,
+  "active": null,
+  "reason": "AI is switched off (LLM_PROVIDERS=none)",
+  "providers": []
+ },
+ "datasets": [
+  {
+   "name": "canonical",
+   "v1": {
+    "employees": 58,
+    "questions": 12,
+    "decisions": 12,
+    "tp": 12,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [
+     {
+      "kind": "exact duplicate row merged",
+      "ok": true
+     },
+     {
+      "kind": "same name, different birth date kept apart",
+      "ok": true
+     },
+     {
+      "kind": "email comma typo repaired on 2nd attempt",
+      "ok": true
+     },
+     {
+      "kind": "invalid value loses to the valid one from another file",
+      "ok": true
+     },
+     {
+      "kind": "placeholder phones (N/A, -, blank) treated as empty",
+      "ok": true
+     },
+     {
+      "kind": "messy name casing / whitespace",
+      "ok": true
+     },
+     {
+      "kind": "email casing / trailing spaces",
+      "ok": true
+     },
+     {
+      "kind": "column with no target field left out",
+      "ok": true
+     }
+    ],
+    "columns": {
+     "total": 28,
+     "auto": 27,
+     "auto_wrong": [],
+     "asked": 1
+    },
+    "fields_total": 928,
+    "fields_correct": 928,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 8,
+     "wrong": 2,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 524,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 6,
+    "seconds": 7.3
+   },
+   "v2": {
+    "employees": 60,
+    "questions": 1,
+    "decisions": 1,
+    "tp": 1,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [],
+    "columns": {
+     "total": 28,
+     "auto": 28,
+     "auto_wrong": [],
+     "asked": 0
+    },
+    "fields_total": 960,
+    "fields_correct": 960,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 0,
+     "wrong": 0,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 548,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 0,
+    "seconds": 4.6,
+    "delta": {
+     "update_expected": [
+      "EMP0010",
+      "EMP0020",
+      "EMP0033"
+     ],
+     "update_actual": [
+      "EMP0010",
+      "EMP0020",
+      "EMP0033"
+     ],
+     "create_expected": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "create_actual": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "unchanged": 55,
+     "ok": true
+    },
+    "repeat_questions": []
+   },
+   "rollback": {
+    "ok": true,
+    "differences": []
+   }
+  },
+  {
+   "name": "dev-1",
+   "v1": {
+    "employees": 58,
+    "questions": 12,
+    "decisions": 12,
+    "tp": 12,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [
+     {
+      "kind": "exact duplicate row merged",
+      "ok": true
+     },
+     {
+      "kind": "same name, different birth date kept apart",
+      "ok": true
+     },
+     {
+      "kind": "email comma typo repaired on 2nd attempt",
+      "ok": true
+     },
+     {
+      "kind": "invalid value loses to the valid one from another file",
+      "ok": true
+     },
+     {
+      "kind": "placeholder phones (N/A, -, blank) treated as empty",
+      "ok": true
+     },
+     {
+      "kind": "messy name casing / whitespace",
+      "ok": true
+     },
+     {
+      "kind": "email casing / trailing spaces",
+      "ok": true
+     },
+     {
+      "kind": "column with no target field left out",
+      "ok": true
+     }
+    ],
+    "columns": {
+     "total": 28,
+     "auto": 27,
+     "auto_wrong": [],
+     "asked": 1
+    },
+    "fields_total": 928,
+    "fields_correct": 928,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 8,
+     "wrong": 2,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 523,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 6,
+    "seconds": 7.1
+   },
+   "v2": {
+    "employees": 60,
+    "questions": 1,
+    "decisions": 1,
+    "tp": 1,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [],
+    "columns": {
+     "total": 28,
+     "auto": 28,
+     "auto_wrong": [],
+     "asked": 0
+    },
+    "fields_total": 960,
+    "fields_correct": 960,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 0,
+     "wrong": 0,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 547,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 0,
+    "seconds": 4.8,
+    "delta": {
+     "update_expected": [
+      "EMP0008",
+      "EMP0009",
+      "EMP0030"
+     ],
+     "update_actual": [
+      "EMP0008",
+      "EMP0009",
+      "EMP0030"
+     ],
+     "create_expected": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "create_actual": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "unchanged": 55,
+     "ok": true
+    },
+    "repeat_questions": []
+   },
+   "rollback": {
+    "ok": true,
+    "differences": []
+   }
+  },
+  {
+   "name": "dev-2",
+   "v1": {
+    "employees": 58,
+    "questions": 12,
+    "decisions": 12,
+    "tp": 12,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [
+     {
+      "kind": "exact duplicate row merged",
+      "ok": true
+     },
+     {
+      "kind": "same name, different birth date kept apart",
+      "ok": true
+     },
+     {
+      "kind": "email comma typo repaired on 2nd attempt",
+      "ok": true
+     },
+     {
+      "kind": "invalid value loses to the valid one from another file",
+      "ok": true
+     },
+     {
+      "kind": "placeholder phones (N/A, -, blank) treated as empty",
+      "ok": true
+     },
+     {
+      "kind": "messy name casing / whitespace",
+      "ok": true
+     },
+     {
+      "kind": "email casing / trailing spaces",
+      "ok": true
+     },
+     {
+      "kind": "column with no target field left out",
+      "ok": true
+     }
+    ],
+    "columns": {
+     "total": 28,
+     "auto": 27,
+     "auto_wrong": [],
+     "asked": 1
+    },
+    "fields_total": 928,
+    "fields_correct": 928,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 8,
+     "wrong": 2,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 526,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 6,
+    "seconds": 7.4
+   },
+   "v2": {
+    "employees": 60,
+    "questions": 1,
+    "decisions": 1,
+    "tp": 1,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [],
+    "columns": {
+     "total": 28,
+     "auto": 28,
+     "auto_wrong": [],
+     "asked": 0
+    },
+    "fields_total": 960,
+    "fields_correct": 960,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 0,
+     "wrong": 0,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 550,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 0,
+    "seconds": 4.7,
+    "delta": {
+     "update_expected": [
+      "EMP0023",
+      "EMP0026",
+      "EMP0034"
+     ],
+     "update_actual": [
+      "EMP0023",
+      "EMP0026",
+      "EMP0034"
+     ],
+     "create_expected": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "create_actual": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "unchanged": 55,
+     "ok": true
+    },
+    "repeat_questions": []
+   },
+   "rollback": {
+    "ok": true,
+    "differences": []
+   }
+  },
+  {
+   "name": "dev-3",
+   "v1": {
+    "employees": 58,
+    "questions": 12,
+    "decisions": 12,
+    "tp": 12,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [
+     {
+      "kind": "exact duplicate row merged",
+      "ok": true
+     },
+     {
+      "kind": "same name, different birth date kept apart",
+      "ok": true
+     },
+     {
+      "kind": "email comma typo repaired on 2nd attempt",
+      "ok": true
+     },
+     {
+      "kind": "invalid value loses to the valid one from another file",
+      "ok": true
+     },
+     {
+      "kind": "placeholder phones (N/A, -, blank) treated as empty",
+      "ok": true
+     },
+     {
+      "kind": "messy name casing / whitespace",
+      "ok": true
+     },
+     {
+      "kind": "email casing / trailing spaces",
+      "ok": true
+     },
+     {
+      "kind": "column with no target field left out",
+      "ok": true
+     }
+    ],
+    "columns": {
+     "total": 28,
+     "auto": 27,
+     "auto_wrong": [],
+     "asked": 1
+    },
+    "fields_total": 928,
+    "fields_correct": 928,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 8,
+     "wrong": 2,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 524,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 6,
+    "seconds": 6.9
+   },
+   "v2": {
+    "employees": 60,
+    "questions": 1,
+    "decisions": 1,
+    "tp": 1,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [],
+    "columns": {
+     "total": 28,
+     "auto": 28,
+     "auto_wrong": [],
+     "asked": 0
+    },
+    "fields_total": 960,
+    "fields_correct": 960,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 0,
+     "wrong": 0,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 548,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 0,
+    "seconds": 4.5,
+    "delta": {
+     "update_expected": [
+      "EMP0025",
+      "EMP0037",
+      "EMP0042"
+     ],
+     "update_actual": [
+      "EMP0025",
+      "EMP0037",
+      "EMP0042"
+     ],
+     "create_expected": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "create_actual": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "unchanged": 55,
+     "ok": true
+    },
+    "repeat_questions": []
+   },
+   "rollback": {
+    "ok": true,
+    "differences": []
+   }
+  },
+  {
+   "name": "dev-4",
+   "v1": {
+    "employees": 58,
+    "questions": 12,
+    "decisions": 12,
+    "tp": 12,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [
+     {
+      "kind": "exact duplicate row merged",
+      "ok": true
+     },
+     {
+      "kind": "same name, different birth date kept apart",
+      "ok": true
+     },
+     {
+      "kind": "email comma typo repaired on 2nd attempt",
+      "ok": true
+     },
+     {
+      "kind": "invalid value loses to the valid one from another file",
+      "ok": true
+     },
+     {
+      "kind": "placeholder phones (N/A, -, blank) treated as empty",
+      "ok": true
+     },
+     {
+      "kind": "messy name casing / whitespace",
+      "ok": true
+     },
+     {
+      "kind": "email casing / trailing spaces",
+      "ok": true
+     },
+     {
+      "kind": "column with no target field left out",
+      "ok": true
+     }
+    ],
+    "columns": {
+     "total": 28,
+     "auto": 27,
+     "auto_wrong": [],
+     "asked": 1
+    },
+    "fields_total": 928,
+    "fields_correct": 928,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 7,
+     "wrong": 3,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 530,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 6,
+    "seconds": 6.4
+   },
+   "v2": {
+    "employees": 60,
+    "questions": 1,
+    "decisions": 1,
+    "tp": 1,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [],
+    "columns": {
+     "total": 28,
+     "auto": 28,
+     "auto_wrong": [],
+     "asked": 0
+    },
+    "fields_total": 960,
+    "fields_correct": 960,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 0,
+     "wrong": 0,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 554,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 0,
+    "seconds": 4.5,
+    "delta": {
+     "update_expected": [
+      "EMP0033",
+      "EMP0040",
+      "EMP0044"
+     ],
+     "update_actual": [
+      "EMP0033",
+      "EMP0040",
+      "EMP0044"
+     ],
+     "create_expected": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "create_actual": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "unchanged": 55,
+     "ok": true
+    },
+    "repeat_questions": []
+   },
+   "rollback": {
+    "ok": true,
+    "differences": []
+   }
+  },
+  {
+   "name": "dev-5",
+   "v1": {
+    "employees": 58,
+    "questions": 12,
+    "decisions": 12,
+    "tp": 12,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [
+     {
+      "kind": "exact duplicate row merged",
+      "ok": true
+     },
+     {
+      "kind": "same name, different birth date kept apart",
+      "ok": true
+     },
+     {
+      "kind": "email comma typo repaired on 2nd attempt",
+      "ok": true
+     },
+     {
+      "kind": "invalid value loses to the valid one from another file",
+      "ok": true
+     },
+     {
+      "kind": "placeholder phones (N/A, -, blank) treated as empty",
+      "ok": true
+     },
+     {
+      "kind": "messy name casing / whitespace",
+      "ok": true
+     },
+     {
+      "kind": "email casing / trailing spaces",
+      "ok": true
+     },
+     {
+      "kind": "column with no target field left out",
+      "ok": true
+     }
+    ],
+    "columns": {
+     "total": 28,
+     "auto": 27,
+     "auto_wrong": [],
+     "asked": 1
+    },
+    "fields_total": 928,
+    "fields_correct": 928,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 8,
+     "wrong": 2,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 532,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 6,
+    "seconds": 6.4
+   },
+   "v2": {
+    "employees": 60,
+    "questions": 1,
+    "decisions": 1,
+    "tp": 1,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [],
+    "columns": {
+     "total": 28,
+     "auto": 28,
+     "auto_wrong": [],
+     "asked": 0
+    },
+    "fields_total": 960,
+    "fields_correct": 960,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 0,
+     "wrong": 0,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 556,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 0,
+    "seconds": 4.3,
+    "delta": {
+     "update_expected": [
+      "EMP0016",
+      "EMP0017",
+      "EMP0025"
+     ],
+     "update_actual": [
+      "EMP0016",
+      "EMP0017",
+      "EMP0025"
+     ],
+     "create_expected": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "create_actual": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "unchanged": 55,
+     "ok": true
+    },
+    "repeat_questions": []
+   },
+   "rollback": {
+    "ok": true,
+    "differences": []
+   }
+  },
+  {
+   "name": "dev2-1",
+   "v1": {
+    "employees": 58,
+    "questions": 12,
+    "decisions": 12,
+    "tp": 12,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [
+     {
+      "kind": "exact duplicate row merged",
+      "ok": true
+     },
+     {
+      "kind": "same name, different birth date kept apart",
+      "ok": true
+     },
+     {
+      "kind": "email comma typo repaired on 2nd attempt",
+      "ok": true
+     },
+     {
+      "kind": "invalid value loses to the valid one from another file",
+      "ok": true
+     },
+     {
+      "kind": "placeholder phones (N/A, -, blank) treated as empty",
+      "ok": true
+     },
+     {
+      "kind": "messy name casing / whitespace",
+      "ok": true
+     },
+     {
+      "kind": "email casing / trailing spaces",
+      "ok": true
+     },
+     {
+      "kind": "column with no target field left out",
+      "ok": true
+     }
+    ],
+    "columns": {
+     "total": 28,
+     "auto": 27,
+     "auto_wrong": [],
+     "asked": 1
+    },
+    "fields_total": 928,
+    "fields_correct": 928,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 8,
+     "wrong": 2,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 527,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 6,
+    "seconds": 6.5
+   },
+   "v2": {
+    "employees": 60,
+    "questions": 1,
+    "decisions": 1,
+    "tp": 1,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [],
+    "columns": {
+     "total": 28,
+     "auto": 28,
+     "auto_wrong": [],
+     "asked": 0
+    },
+    "fields_total": 960,
+    "fields_correct": 960,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 0,
+     "wrong": 0,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 551,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 0,
+    "seconds": 4.4,
+    "delta": {
+     "update_expected": [
+      "EMP0020",
+      "EMP0029",
+      "EMP0044"
+     ],
+     "update_actual": [
+      "EMP0020",
+      "EMP0029",
+      "EMP0044"
+     ],
+     "create_expected": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "create_actual": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "unchanged": 55,
+     "ok": true
+    },
+    "repeat_questions": []
+   },
+   "rollback": {
+    "ok": true,
+    "differences": []
+   }
+  },
+  {
+   "name": "dev2-2",
+   "v1": {
+    "employees": 58,
+    "questions": 12,
+    "decisions": 12,
+    "tp": 12,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [
+     {
+      "kind": "exact duplicate row merged",
+      "ok": true
+     },
+     {
+      "kind": "same name, different birth date kept apart",
+      "ok": true
+     },
+     {
+      "kind": "email comma typo repaired on 2nd attempt",
+      "ok": true
+     },
+     {
+      "kind": "invalid value loses to the valid one from another file",
+      "ok": true
+     },
+     {
+      "kind": "placeholder phones (N/A, -, blank) treated as empty",
+      "ok": true
+     },
+     {
+      "kind": "messy name casing / whitespace",
+      "ok": true
+     },
+     {
+      "kind": "email casing / trailing spaces",
+      "ok": true
+     },
+     {
+      "kind": "column with no target field left out",
+      "ok": true
+     }
+    ],
+    "columns": {
+     "total": 28,
+     "auto": 27,
+     "auto_wrong": [],
+     "asked": 1
+    },
+    "fields_total": 928,
+    "fields_correct": 928,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 8,
+     "wrong": 2,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 537,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 6,
+    "seconds": 6.4
+   },
+   "v2": {
+    "employees": 60,
+    "questions": 1,
+    "decisions": 1,
+    "tp": 1,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [],
+    "columns": {
+     "total": 28,
+     "auto": 28,
+     "auto_wrong": [],
+     "asked": 0
+    },
+    "fields_total": 960,
+    "fields_correct": 960,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 0,
+     "wrong": 0,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 560,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 0,
+    "seconds": 4.3,
+    "delta": {
+     "update_expected": [
+      "EMP0018",
+      "EMP0039",
+      "EMP0043"
+     ],
+     "update_actual": [
+      "EMP0018",
+      "EMP0039",
+      "EMP0043"
+     ],
+     "create_expected": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "create_actual": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "unchanged": 55,
+     "ok": true
+    },
+    "repeat_questions": []
+   },
+   "rollback": {
+    "ok": true,
+    "differences": []
+   }
+  },
+  {
+   "name": "dev2-3",
+   "v1": {
+    "employees": 58,
+    "questions": 12,
+    "decisions": 12,
+    "tp": 12,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [
+     {
+      "kind": "exact duplicate row merged",
+      "ok": true
+     },
+     {
+      "kind": "same name, different birth date kept apart",
+      "ok": true
+     },
+     {
+      "kind": "email comma typo repaired on 2nd attempt",
+      "ok": true
+     },
+     {
+      "kind": "invalid value loses to the valid one from another file",
+      "ok": true
+     },
+     {
+      "kind": "placeholder phones (N/A, -, blank) treated as empty",
+      "ok": true
+     },
+     {
+      "kind": "messy name casing / whitespace",
+      "ok": true
+     },
+     {
+      "kind": "email casing / trailing spaces",
+      "ok": true
+     },
+     {
+      "kind": "column with no target field left out",
+      "ok": true
+     }
+    ],
+    "columns": {
+     "total": 28,
+     "auto": 27,
+     "auto_wrong": [],
+     "asked": 1
+    },
+    "fields_total": 928,
+    "fields_correct": 928,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 8,
+     "wrong": 2,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 513,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 6,
+    "seconds": 6.4
+   },
+   "v2": {
+    "employees": 60,
+    "questions": 1,
+    "decisions": 1,
+    "tp": 1,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [],
+    "columns": {
+     "total": 28,
+     "auto": 28,
+     "auto_wrong": [],
+     "asked": 0
+    },
+    "fields_total": 960,
+    "fields_correct": 960,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 0,
+     "wrong": 0,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 537,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 0,
+    "seconds": 4.3,
+    "delta": {
+     "update_expected": [
+      "EMP0014",
+      "EMP0018",
+      "EMP0045"
+     ],
+     "update_actual": [
+      "EMP0014",
+      "EMP0018",
+      "EMP0045"
+     ],
+     "create_expected": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "create_actual": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "unchanged": 55,
+     "ok": true
+    },
+    "repeat_questions": []
+   },
+   "rollback": {
+    "ok": true,
+    "differences": []
+   }
+  },
+  {
+   "name": "dev2-4",
+   "v1": {
+    "employees": 58,
+    "questions": 12,
+    "decisions": 12,
+    "tp": 12,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [
+     {
+      "kind": "exact duplicate row merged",
+      "ok": true
+     },
+     {
+      "kind": "same name, different birth date kept apart",
+      "ok": true
+     },
+     {
+      "kind": "email comma typo repaired on 2nd attempt",
+      "ok": true
+     },
+     {
+      "kind": "invalid value loses to the valid one from another file",
+      "ok": true
+     },
+     {
+      "kind": "placeholder phones (N/A, -, blank) treated as empty",
+      "ok": true
+     },
+     {
+      "kind": "messy name casing / whitespace",
+      "ok": true
+     },
+     {
+      "kind": "email casing / trailing spaces",
+      "ok": true
+     },
+     {
+      "kind": "column with no target field left out",
+      "ok": true
+     }
+    ],
+    "columns": {
+     "total": 28,
+     "auto": 27,
+     "auto_wrong": [],
+     "asked": 1
+    },
+    "fields_total": 928,
+    "fields_correct": 928,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 8,
+     "wrong": 2,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 522,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 6,
+    "seconds": 6.3
+   },
+   "v2": {
+    "employees": 60,
+    "questions": 1,
+    "decisions": 1,
+    "tp": 1,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [],
+    "columns": {
+     "total": 28,
+     "auto": 28,
+     "auto_wrong": [],
+     "asked": 0
+    },
+    "fields_total": 960,
+    "fields_correct": 960,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 0,
+     "wrong": 0,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 546,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 0,
+    "seconds": 4.0,
+    "delta": {
+     "update_expected": [
+      "EMP0037",
+      "EMP0040",
+      "EMP0046"
+     ],
+     "update_actual": [
+      "EMP0037",
+      "EMP0040",
+      "EMP0046"
+     ],
+     "create_expected": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "create_actual": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "unchanged": 55,
+     "ok": true
+    },
+    "repeat_questions": []
+   },
+   "rollback": {
+    "ok": true,
+    "differences": []
+   }
+  },
+  {
+   "name": "dev2-5",
+   "v1": {
+    "employees": 58,
+    "questions": 12,
+    "decisions": 12,
+    "tp": 12,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [
+     {
+      "kind": "exact duplicate row merged",
+      "ok": true
+     },
+     {
+      "kind": "same name, different birth date kept apart",
+      "ok": true
+     },
+     {
+      "kind": "email comma typo repaired on 2nd attempt",
+      "ok": true
+     },
+     {
+      "kind": "invalid value loses to the valid one from another file",
+      "ok": true
+     },
+     {
+      "kind": "placeholder phones (N/A, -, blank) treated as empty",
+      "ok": true
+     },
+     {
+      "kind": "messy name casing / whitespace",
+      "ok": true
+     },
+     {
+      "kind": "email casing / trailing spaces",
+      "ok": true
+     },
+     {
+      "kind": "column with no target field left out",
+      "ok": true
+     }
+    ],
+    "columns": {
+     "total": 28,
+     "auto": 27,
+     "auto_wrong": [],
+     "asked": 1
+    },
+    "fields_total": 928,
+    "fields_correct": 928,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 8,
+     "wrong": 2,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 530,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 6,
+    "seconds": 6.4
+   },
+   "v2": {
+    "employees": 60,
+    "questions": 1,
+    "decisions": 1,
+    "tp": 1,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [],
+    "columns": {
+     "total": 28,
+     "auto": 28,
+     "auto_wrong": [],
+     "asked": 0
+    },
+    "fields_total": 960,
+    "fields_correct": 960,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 0,
+     "wrong": 0,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 555,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 0,
+    "seconds": 4.0,
+    "delta": {
+     "update_expected": [
+      "EMP0027",
+      "EMP0040",
+      "EMP0043"
+     ],
+     "update_actual": [
+      "EMP0027",
+      "EMP0040",
+      "EMP0043"
+     ],
+     "create_expected": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "create_actual": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "unchanged": 55,
+     "ok": true
+    },
+    "repeat_questions": []
+   },
+   "rollback": {
+    "ok": true,
+    "differences": []
+   }
+  },
+  {
+   "name": "final-1",
+   "v1": {
+    "employees": 58,
+    "questions": 12,
+    "decisions": 12,
+    "tp": 12,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [
+     {
+      "kind": "exact duplicate row merged",
+      "ok": true
+     },
+     {
+      "kind": "same name, different birth date kept apart",
+      "ok": true
+     },
+     {
+      "kind": "email comma typo repaired on 2nd attempt",
+      "ok": true
+     },
+     {
+      "kind": "invalid value loses to the valid one from another file",
+      "ok": true
+     },
+     {
+      "kind": "placeholder phones (N/A, -, blank) treated as empty",
+      "ok": true
+     },
+     {
+      "kind": "messy name casing / whitespace",
+      "ok": true
+     },
+     {
+      "kind": "email casing / trailing spaces",
+      "ok": true
+     },
+     {
+      "kind": "column with no target field left out",
+      "ok": true
+     }
+    ],
+    "columns": {
+     "total": 28,
+     "auto": 27,
+     "auto_wrong": [],
+     "asked": 1
+    },
+    "fields_total": 928,
+    "fields_correct": 928,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 8,
+     "wrong": 2,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 533,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 6,
+    "seconds": 6.7
+   },
+   "v2": {
+    "employees": 60,
+    "questions": 1,
+    "decisions": 1,
+    "tp": 1,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [],
+    "columns": {
+     "total": 28,
+     "auto": 28,
+     "auto_wrong": [],
+     "asked": 0
+    },
+    "fields_total": 960,
+    "fields_correct": 960,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 0,
+     "wrong": 0,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 557,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 0,
+    "seconds": 4.1,
+    "delta": {
+     "update_expected": [
+      "EMP0010",
+      "EMP0025",
+      "EMP0042"
+     ],
+     "update_actual": [
+      "EMP0010",
+      "EMP0025",
+      "EMP0042"
+     ],
+     "create_expected": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "create_actual": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "unchanged": 55,
+     "ok": true
+    },
+    "repeat_questions": []
+   },
+   "rollback": {
+    "ok": true,
+    "differences": []
+   }
+  },
+  {
+   "name": "final-2",
+   "v1": {
+    "employees": 58,
+    "questions": 13,
+    "decisions": 13,
+    "tp": 12,
+    "fp": [
+     "mapping: hrms_legacy_export.csv|Cell Phone - Where should column 'Cell Phone' go?"
+    ],
+    "fn": [],
+    "precision": 0.923,
+    "recall": 1.0,
+    "traps": [
+     {
+      "kind": "exact duplicate row merged",
+      "ok": true
+     },
+     {
+      "kind": "same name, different birth date kept apart",
+      "ok": true
+     },
+     {
+      "kind": "email comma typo repaired on 2nd attempt",
+      "ok": true
+     },
+     {
+      "kind": "invalid value loses to the valid one from another file",
+      "ok": true
+     },
+     {
+      "kind": "placeholder phones (N/A, -, blank) treated as empty",
+      "ok": true
+     },
+     {
+      "kind": "messy name casing / whitespace",
+      "ok": true
+     },
+     {
+      "kind": "email casing / trailing spaces",
+      "ok": true
+     },
+     {
+      "kind": "column with no target field left out",
+      "ok": true
+     }
+    ],
+    "columns": {
+     "total": 28,
+     "auto": 26,
+     "auto_wrong": [],
+     "asked": 2
+    },
+    "fields_total": 928,
+    "fields_correct": 928,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 9,
+     "wrong": 2,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 523,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 6,
+    "seconds": 6.6
+   },
+   "v2": {
+    "employees": 60,
+    "questions": 1,
+    "decisions": 1,
+    "tp": 1,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [],
+    "columns": {
+     "total": 28,
+     "auto": 28,
+     "auto_wrong": [],
+     "asked": 0
+    },
+    "fields_total": 960,
+    "fields_correct": 960,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 0,
+     "wrong": 0,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 549,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 0,
+    "seconds": 4.5,
+    "delta": {
+     "update_expected": [
+      "EMP0023",
+      "EMP0041",
+      "EMP0048"
+     ],
+     "update_actual": [
+      "EMP0023",
+      "EMP0041",
+      "EMP0048"
+     ],
+     "create_expected": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "create_actual": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "unchanged": 55,
+     "ok": true
+    },
+    "repeat_questions": []
+   },
+   "rollback": {
+    "ok": true,
+    "differences": []
+   }
+  },
+  {
+   "name": "final-3",
+   "v1": {
+    "employees": 58,
+    "questions": 13,
+    "decisions": 13,
+    "tp": 12,
+    "fp": [
+     "mapping: hrms_legacy_export.csv|Cell Phone - Where should column 'Cell Phone' go?"
+    ],
+    "fn": [],
+    "precision": 0.923,
+    "recall": 1.0,
+    "traps": [
+     {
+      "kind": "exact duplicate row merged",
+      "ok": true
+     },
+     {
+      "kind": "same name, different birth date kept apart",
+      "ok": true
+     },
+     {
+      "kind": "email comma typo repaired on 2nd attempt",
+      "ok": true
+     },
+     {
+      "kind": "invalid value loses to the valid one from another file",
+      "ok": true
+     },
+     {
+      "kind": "placeholder phones (N/A, -, blank) treated as empty",
+      "ok": true
+     },
+     {
+      "kind": "messy name casing / whitespace",
+      "ok": true
+     },
+     {
+      "kind": "email casing / trailing spaces",
+      "ok": true
+     },
+     {
+      "kind": "column with no target field left out",
+      "ok": true
+     }
+    ],
+    "columns": {
+     "total": 28,
+     "auto": 26,
+     "auto_wrong": [],
+     "asked": 2
+    },
+    "fields_total": 928,
+    "fields_correct": 928,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 9,
+     "wrong": 2,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 530,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 6,
+    "seconds": 6.9
+   },
+   "v2": {
+    "employees": 60,
+    "questions": 1,
+    "decisions": 1,
+    "tp": 1,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [],
+    "columns": {
+     "total": 28,
+     "auto": 28,
+     "auto_wrong": [],
+     "asked": 0
+    },
+    "fields_total": 960,
+    "fields_correct": 960,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 0,
+     "wrong": 0,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 555,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 0,
+    "seconds": 4.5,
+    "delta": {
+     "update_expected": [
+      "EMP0011",
+      "EMP0023",
+      "EMP0035"
+     ],
+     "update_actual": [
+      "EMP0011",
+      "EMP0023",
+      "EMP0035"
+     ],
+     "create_expected": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "create_actual": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "unchanged": 55,
+     "ok": true
+    },
+    "repeat_questions": []
+   },
+   "rollback": {
+    "ok": true,
+    "differences": []
+   }
+  },
+  {
+   "name": "final-4",
+   "v1": {
+    "employees": 58,
+    "questions": 12,
+    "decisions": 12,
+    "tp": 12,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [
+     {
+      "kind": "exact duplicate row merged",
+      "ok": true
+     },
+     {
+      "kind": "same name, different birth date kept apart",
+      "ok": true
+     },
+     {
+      "kind": "email comma typo repaired on 2nd attempt",
+      "ok": true
+     },
+     {
+      "kind": "invalid value loses to the valid one from another file",
+      "ok": true
+     },
+     {
+      "kind": "placeholder phones (N/A, -, blank) treated as empty",
+      "ok": true
+     },
+     {
+      "kind": "messy name casing / whitespace",
+      "ok": true
+     },
+     {
+      "kind": "email casing / trailing spaces",
+      "ok": true
+     },
+     {
+      "kind": "column with no target field left out",
+      "ok": true
+     }
+    ],
+    "columns": {
+     "total": 28,
+     "auto": 27,
+     "auto_wrong": [],
+     "asked": 1
+    },
+    "fields_total": 928,
+    "fields_correct": 928,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 8,
+     "wrong": 2,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 519,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 6,
+    "seconds": 6.8
+   },
+   "v2": {
+    "employees": 60,
+    "questions": 1,
+    "decisions": 1,
+    "tp": 1,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [],
+    "columns": {
+     "total": 28,
+     "auto": 28,
+     "auto_wrong": [],
+     "asked": 0
+    },
+    "fields_total": 960,
+    "fields_correct": 960,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 0,
+     "wrong": 0,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 543,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 0,
+    "seconds": 4.7,
+    "delta": {
+     "update_expected": [
+      "EMP0007",
+      "EMP0010",
+      "EMP0036"
+     ],
+     "update_actual": [
+      "EMP0007",
+      "EMP0010",
+      "EMP0036"
+     ],
+     "create_expected": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "create_actual": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "unchanged": 55,
+     "ok": true
+    },
+    "repeat_questions": []
+   },
+   "rollback": {
+    "ok": true,
+    "differences": []
+   }
+  },
+  {
+   "name": "final-5",
+   "v1": {
+    "employees": 58,
+    "questions": 12,
+    "decisions": 12,
+    "tp": 12,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [
+     {
+      "kind": "exact duplicate row merged",
+      "ok": true
+     },
+     {
+      "kind": "same name, different birth date kept apart",
+      "ok": true
+     },
+     {
+      "kind": "email comma typo repaired on 2nd attempt",
+      "ok": true
+     },
+     {
+      "kind": "invalid value loses to the valid one from another file",
+      "ok": true
+     },
+     {
+      "kind": "placeholder phones (N/A, -, blank) treated as empty",
+      "ok": true
+     },
+     {
+      "kind": "messy name casing / whitespace",
+      "ok": true
+     },
+     {
+      "kind": "email casing / trailing spaces",
+      "ok": true
+     },
+     {
+      "kind": "column with no target field left out",
+      "ok": true
+     }
+    ],
+    "columns": {
+     "total": 28,
+     "auto": 27,
+     "auto_wrong": [],
+     "asked": 1
+    },
+    "fields_total": 928,
+    "fields_correct": 928,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 7,
+     "wrong": 3,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 516,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 6,
+    "seconds": 6.9
+   },
+   "v2": {
+    "employees": 60,
+    "questions": 1,
+    "decisions": 1,
+    "tp": 1,
+    "fp": [],
+    "fn": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "traps": [],
+    "columns": {
+     "total": 28,
+     "auto": 28,
+     "auto_wrong": [],
+     "asked": 0
+    },
+    "fields_total": 960,
+    "fields_correct": 960,
+    "wrong_silent": [],
+    "wrong_human": [],
+    "missing": [],
+    "extra": [],
+    "suggestions": {
+     "right": 0,
+     "wrong": 0,
+     "none": 1
+    },
+    "unanswerable": [],
+    "auto_actions": 542,
+    "ai_calls": 0,
+    "ai_used": {},
+    "ai_failures": 0,
+    "push_retries": 0,
+    "seconds": 4.4,
+    "delta": {
+     "update_expected": [
+      "EMP0008",
+      "EMP0010",
+      "EMP0038"
+     ],
+     "update_actual": [
+      "EMP0008",
+      "EMP0010",
+      "EMP0038"
+     ],
+     "create_expected": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "create_actual": [
+      "EMP0061",
+      "EMP0062"
+     ],
+     "unchanged": 55,
+     "ok": true
+    },
+    "repeat_questions": []
+   },
+   "rollback": {
+    "ok": true,
+    "differences": []
+   }
+  }
+ ]
+}

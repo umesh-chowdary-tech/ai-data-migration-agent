@@ -7,4 +7,5 @@ httpx>=0.27
 openai>=1.40
 python-dotenv>=1.0
 python-multipart>=0.0.9
+defusedxml>=0.7          # openpyxl uses it automatically: blocks XML-bomb / external-entity .xlsx files
 pytest>=8.0

@@ -21,7 +21,7 @@ from .. import config, db
 from ..schema import TargetSchema, load as load_schema, norm
 from . import clean, escalations as esc, mapper, policy, rules
 from . import validate as val
-from .llm import AIResult, dig, get as get_llm
+from .llm import UNTRUSTED, AIResult, dig, get as get_llm
 from .log import audit, emit, set_stage
 from .profile import profile_column
 from .records import FINAL_OK, Record
@@ -60,20 +60,40 @@ def start(run_id: int) -> threading.Thread:
 # Stage 1-2: ingest + map
 # ------------------------------------------------------------------------------------------------
 
-def load_files(run_id: int) -> dict[str, pd.DataFrame]:
+def _read_error(exc: Exception) -> str:
+    # openpyxl wraps defusedxml's refusal in a generic ValueError - walk the chain to report the real cause.
+    seen, e = set(), exc
+    while e is not None and id(e) not in seen:
+        seen.add(id(e))
+        if type(e).__module__.startswith("defusedxml"):
+            return ("it contains XML constructs that aren't allowed in a spreadsheet (possible XML bomb / "
+                    "external entity attack)")
+        e = e.__cause__ or e.__context__
+    if isinstance(exc, UnicodeDecodeError):
+        return "it isn't valid UTF-8 text"
+    return f"{type(exc).__name__}: {' '.join(str(exc).split())[:200]}"
+
+
+def load_files(run_id: int) -> tuple[dict[str, pd.DataFrame], dict[str, str]]:
+    """Read every uploaded file. A file that can't be read safely is rejected on its own - never the whole run."""
     frames: dict[str, pd.DataFrame] = {}
+    rejected: dict[str, str] = {}
     for path in sorted(files_dir(run_id).iterdir()):
         suffix = path.suffix.lower()
-        if suffix == ".csv":
-            df = pd.read_csv(path, dtype=str, keep_default_na=False, encoding="utf-8-sig")
-        elif suffix in (".xlsx", ".xls"):
-            df = pd.read_excel(path, dtype=object)
-        else:
+        try:
+            if suffix == ".csv":
+                df = pd.read_csv(path, dtype=str, keep_default_na=False, encoding="utf-8-sig")
+            elif suffix in (".xlsx", ".xls"):
+                df = pd.read_excel(path, dtype=object)  # openpyxl parses via defusedxml when it's installed
+            else:
+                continue
+        except Exception as exc:
+            rejected[path.name] = _read_error(exc)
             continue
         df.columns = [str(c).strip() for c in df.columns]
         df = df.loc[:, [c for c in df.columns if not c.lower().startswith("unnamed")]]
         frames[path.name] = df
-    return frames
+    return frames, rejected
 
 
 def _ai_state(run_id: int) -> dict:
@@ -123,9 +143,13 @@ def run_all(run_id: int) -> None:
         emit(run_id, "ingest", "warning", f"No AI involved in this run: {status['reason']}. The agent continues on "
                                           "deterministic rules only - no AI proposals or suggestions.",
              category="ai_unavailable")
-    frames = load_files(run_id)
+    frames, rejected = load_files(run_id)
+    for name, why in rejected.items():
+        emit(run_id, "ingest", "error", f"Rejected {name}: {why}. Nothing from this file will be migrated.",
+             category="file_rejected")
+        audit(run_id, "agent", "rejected file", name, reason=why)
     if not frames:
-        raise RuntimeError("No CSV/Excel files found for this run")
+        raise RuntimeError("No readable CSV/Excel files for this run")
     for name, df in frames.items():
         emit(run_id, "ingest", "info", f"Read {name}: {len(df)} rows, {len(df.columns)} columns",
              data={"columns": list(df.columns)})
@@ -333,7 +357,7 @@ def _escalate_date(run_id, m, fmt, stats, dmy, mdy, frames) -> None:
 
 def continue_run(run_id: int) -> None:
     schema = load_schema()
-    frames = load_files(run_id)
+    frames, _ = load_files(run_id)  # rejected files were already reported when the run started
     infer_date_formats(run_id, frames, schema)  # before pausing, so all column-level questions arrive together
     if _pause_if_blocked(run_id):
         return
@@ -398,7 +422,12 @@ def clean_rows(run_id: int, frames: dict[str, pd.DataFrame], schema: TargetSchem
                                          "reason": "rule you taught me earlier"})
                     continue
                 if f.type == "full_name":
-                    first, last, how = clean.split_full_name(raw)
+                    try:
+                        first, last, how = clean.split_full_name(raw)
+                    except clean.CleanError as e:
+                        p["errors"].append({"field": "first_name", "raw": clean.text(raw), "code": e.code,
+                                            "message": e.message, "file": file})
+                        continue
                     if first:
                         p["values"]["first_name"] = first
                     if last:
@@ -597,7 +626,7 @@ def _llm_enum_suggestions(run_id: int, groups: dict[tuple, list[Record]], schema
     import json
     items = [{"field": f, "allowed": schema.fields[f].values, "value": raw} for (f, raw) in groups]
     res = llm.complete_json("You help clean HR data. For each value, suggest the closest allowed category, or null "
-                            "if none is defensible. Confidence 0-1.",
+                            "if none is defensible. Confidence 0-1. " + UNTRUSTED,
                             json.dumps({"items": items, "output_format": {"suggestions": [
                                 {"field": "", "value": "", "suggestion": "<allowed value or null>", "confidence": 0.0,
                                  "reason": ""}]}}))

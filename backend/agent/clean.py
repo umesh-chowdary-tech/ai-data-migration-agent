@@ -222,7 +222,19 @@ def enum_match(f: Field, value: Any) -> tuple[str | None, str | None]:
     return None, None
 
 
+FORMULA_START = ("=", "+", "@")
+
+
+def check_safe_text(value: Any) -> None:
+    """Refuse free-text values that would execute as a formula when someone opens an export in Excel."""
+    s = str(value).strip()
+    if s.startswith(FORMULA_START) or "\t" in s or "\r" in s:
+        raise CleanError("suspicious_value", f"'{s[:40]}' looks like a spreadsheet formula - it could run when "
+                                             "someone opens an export in Excel, so I won't migrate it unchecked")
+
+
 def split_full_name(value: Any) -> tuple[str | None, str | None, str]:
+    check_safe_text(value)
     s = text(value)
     if "," in s:
         last, first = [p.strip() for p in s.split(",", 1)]
@@ -239,9 +251,11 @@ def clean_value(f: Field, value: Any, schema: TargetSchema, date_format: str | N
         out = clean_id(value, schema)
         return out, ("id_format" if out != text(value) else None)
     if f.type == "name":
+        check_safe_text(value)
         out = smart_title(value)
         return out, ("casing" if out != text(value) else "whitespace" if out != str(value) else None)
     if f.type == "text":
+        check_safe_text(value)
         out = text(value)
         return out, ("whitespace" if out != value else None)
     if f.type == "email":

@@ -3,15 +3,19 @@ from __future__ import annotations
 
 import asyncio
 import collections
+import csv
+import io
 import json
+import re
 import shutil
 import threading
+from datetime import datetime, timezone
 from contextlib import asynccontextmanager
 from typing import Any
 
 from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import FileResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -125,28 +129,47 @@ def list_runs():
     return [_run_out(r) for r in db.query("SELECT * FROM runs ORDER BY id DESC")]
 
 
+ALLOWED_SUFFIXES = (".csv", ".xlsx", ".xls")
+
+
+def safe_filename(raw: str | None) -> str:
+    """Strip any directory part and odd characters, so an upload can never be written outside the run folder."""
+    name = (raw or "").replace("\\", "/").split("/")[-1]
+    name = re.sub(r"[^A-Za-z0-9._ -]", "_", name).strip(" .")
+    if not name or not name.lower().endswith(ALLOWED_SUFFIXES):
+        raise HTTPException(400, f"{raw!r}: only CSV and Excel files are supported")
+    return name
+
+
 @app.post("/api/runs")
 async def create_run(sample: str | None = Form(None), files: list[UploadFile] | None = File(None)):
     if not sample and not files:
         raise HTTPException(400, "Choose a sample dataset or upload at least one CSV/Excel file")
-    label = SAMPLES.get(sample or "", "Uploaded files")
+    if sample and sample not in SAMPLES:  # never treat user input as a path
+        raise HTTPException(404, "Unknown sample")
+    if files and len(files) > config.MAX_UPLOAD_FILES:
+        raise HTTPException(400, f"At most {config.MAX_UPLOAD_FILES} files per run")
+    # Validate every upload fully before anything is created.
+    uploads: list[tuple[str, bytes]] = []
+    for up in files or []:
+        name = safe_filename(up.filename)
+        data = await up.read(config.MAX_UPLOAD_BYTES + 1)
+        if len(data) > config.MAX_UPLOAD_BYTES:
+            raise HTTPException(413, f"{name} is larger than {config.MAX_UPLOAD_BYTES // 2**20} MB")
+        uploads.append((name, data))
+
     run_id = db.execute("INSERT INTO runs (label, created_at, status, stage, files_json) VALUES (?,?,?,?,?)",
-                        (label, db.now(), "queued", "ingest", "[]"))
+                        (SAMPLES.get(sample or "", "Uploaded files"), db.now(), "queued", "ingest", "[]"))
     folder = pipeline.files_dir(run_id)
     folder.mkdir(parents=True, exist_ok=True)
     names = []
     if sample:
-        src = config.SAMPLES_DIR / sample
-        if not src.exists():
-            raise HTTPException(404, "Unknown sample")
-        for p in sorted(src.iterdir()):
-            shutil.copy(p, folder / p.name)
-            names.append(p.name)
-    for up in files or []:
-        name = up.filename.replace("\\", "/").split("/")[-1]
-        if not name.lower().endswith((".csv", ".xlsx", ".xls")):
-            raise HTTPException(400, f"{name}: only CSV and Excel files are supported")
-        (folder / name).write_bytes(await up.read())
+        for p in sorted((config.SAMPLES_DIR / sample).iterdir()):
+            if p.suffix.lower() in ALLOWED_SUFFIXES:  # sample folders also hold the evaluation ground truth
+                shutil.copy(p, folder / p.name)
+                names.append(p.name)
+    for name, data in uploads:
+        (folder / name).write_bytes(data)
         names.append(name)
     db.execute("UPDATE runs SET files_json=? WHERE id=?", (db.dumps(names), run_id))
     pipeline.start(run_id)
@@ -225,6 +248,26 @@ def get_audit(run_id: int):
     return [{"id": r["id"], "ts": r["ts"], "actor": r["actor"], "action": r["action"], "entity": r["entity"],
              "before": db.loads(r["before_json"]), "after": db.loads(r["after_json"]), "reason": r["reason"]}
             for r in rows]
+
+
+def csv_safe(value: Any) -> str:
+    """Neutralise spreadsheet formulas: client data flows into the audit trail and must not execute in Excel."""
+    s = "" if value is None else value if isinstance(value, str) else json.dumps(value, default=str, ensure_ascii=False)
+    return "'" + s if s[:1] in ("=", "+", "-", "@", "\t", "\r") else s
+
+
+@app.get("/api/runs/{run_id}/audit.csv")
+def export_audit(run_id: int):
+    _get_run(run_id)
+    buf = io.StringIO()
+    writer = csv.writer(buf)
+    writer.writerow(["time_utc", "actor", "action", "entity", "before", "after", "reason"])
+    for r in get_audit(run_id):
+        writer.writerow([csv_safe(x) for x in (
+            datetime.fromtimestamp(r["ts"], timezone.utc).isoformat(timespec="seconds"),
+            r["actor"], r["action"], r["entity"], r["before"], r["after"], r["reason"])])
+    return Response(buf.getvalue(), media_type="text/csv",
+                    headers={"Content-Disposition": f'attachment; filename="migration-run-{run_id}-audit.csv"'})
 
 
 class ResolveIn(BaseModel):

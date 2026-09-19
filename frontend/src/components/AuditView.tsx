@@ -12,13 +12,9 @@ export function AuditView({ entries, runId }: { entries: AuditEntry[]; runId: nu
     (!q || `${e.action} ${e.entity} ${e.reason}`.toLowerCase().includes(q.toLowerCase())));
 
   function exportCsv() {
-    const esc = (s: string) => `"${String(s ?? "").replace(/"/g, '""')}"`;
-    const lines = [["time", "actor", "action", "entity", "before", "after", "reason"].join(",")].concat(
-      entries.map((e) => [new Date(e.ts * 1000).toISOString(), e.actor, e.action, e.entity, JSON.stringify(e.before ?? ""), JSON.stringify(e.after ?? ""), e.reason].map(esc).join(",")));
-    const blob = new Blob([lines.join("\n")], { type: "text/csv" });
+    // Server-side export: client data in the trail is neutralised so it can't run as an Excel formula.
     const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `migration-run-${runId}-audit.csv`;
+    a.href = `/api/runs/${runId}/audit.csv`;
     a.click();
   }
 

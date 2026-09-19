@@ -11,8 +11,8 @@ from . import config
 
 
 def norm(text: str) -> str:
-    """Normalise a header / enum token: lower-case, separators to spaces, collapse whitespace."""
-    text = str(text).strip().lower()
+    """Normalise a header / enum token: split camelCase, lower-case, separators to spaces, collapse whitespace."""
+    text = re.sub(r"(?<=[a-z])(?=[A-Z])", " ", str(text).strip()).lower()  # FirstName -> first name
     text = re.sub(r"[_\-./]+", " ", text)
     text = re.sub(r"[^a-z0-9&+ ]", "", text)
     return re.sub(r"\s+", " ", text).strip()

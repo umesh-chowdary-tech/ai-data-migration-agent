@@ -59,12 +59,26 @@ def _check_input(e: dict, action: str, value: Any) -> Any:
         if value not in ("merge", "keep_both"):
             raise InputError("Choose merge or keep both")
     elif t == "conflict":
+        # Only the values the source files actually disagreed on may be chosen - never an arbitrary new value.
+        if value not in [o["value"] for o in e["context"].get("options", [])]:
+            raise InputError("Pick one of the values found in the source files")
         return value
     elif t in ("invalid_value", "validation", "push_failure"):
+        proposed = (e["proposal"] or {}).get("value")
         if value in ("skip", "retry"):
+            if value != proposed:
+                raise InputError("That action isn't available for this item")
             return value
         if not isinstance(value, dict) or not value:
             raise InputError("Fill in at least one field")
+        # A correction may only touch the fields this card offered - not, say, salary via a phone fix.
+        correct = e["correct"] or {}
+        offered = {f["name"] for f in correct.get("fields", [])} if correct.get("kind") == "fields" else set()
+        if isinstance(proposed, dict):
+            offered |= set(proposed)
+        extra = sorted(set(value) - offered)
+        if extra:
+            raise InputError(f"These fields can't be changed from this item: {', '.join(extra)}")
         out = {}
         for fname, v in value.items():
             f = schema.fields.get(fname)
