@@ -1,0 +1,148 @@
+# Target schema for the new HR platform ("employee" entity).
+# The agent reads this at runtime: aliases/synonyms drive mapping + cleanup,
+# required/pattern/unique drive validation. Nothing here is specific to one client file.
+
+entity: employee
+primary_key: employee_id
+company_domains: [acmecorp.com]
+
+id_format:
+  prefix: EMP
+  digits: 4
+
+fields:
+  employee_id:
+    label: Employee ID
+    type: id
+    required: true
+    unique: true
+    pattern: '^EMP\d{4}$'
+    description: Unique employee code, e.g. EMP0042
+    aliases: [employee id, emp id, employee code, emp code, id, emp no, employee number, staff id]
+
+  first_name:
+    label: First name
+    type: name
+    required: true
+    aliases: [first name, given name, fname, forename]
+
+  last_name:
+    label: Last name
+    type: name
+    required: true
+    aliases: [last name, surname, family name, lname]
+
+  email:
+    label: Work email
+    type: email
+    email_kind: work
+    required: true
+    unique: true
+    description: Company-issued email address (must be on a company domain)
+    aliases: [email, e-mail, work email, official email, email address, company email, mail id]
+
+  personal_email:
+    label: Personal email
+    type: email
+    email_kind: personal
+    aliases: [personal email, private email, alternate email, personal mail]
+
+  phone:
+    label: Mobile number
+    type: phone
+    description: Employee's own mobile number
+    aliases: [phone, mobile, mobile no, mobile number, phone number, phone no, cell, cell number]
+
+  emergency_contact_phone:
+    label: Emergency contact number
+    type: phone
+    description: Phone number of the employee's emergency contact person
+    aliases: [emergency contact, emergency contact number, emergency contact no, emergency phone, emergency number]
+
+  department:
+    label: Department
+    type: enum
+    required: true
+    values: [Engineering, Sales, Marketing, Human Resources, Finance, Operations]
+    synonyms:
+      Engineering: [engg, eng, tech, technology, r&d, development, it, software]
+      Sales: [business development, bd, inside sales]
+      Marketing: [mktg, growth, brand]
+      Human Resources: [hr, people, people ops, people operations, talent, hrbp]
+      Finance: [fin, accounts, finance & accounts, accounting, f&a]
+      Operations: [ops, admin, administration, facilities]
+    aliases: [department, dept, team, function, division, business unit]
+
+  job_title:
+    label: Job title
+    type: text
+    aliases: [job title, designation, title, role, position]
+
+  date_of_joining:
+    label: Date of joining
+    type: date
+    required: true
+    date_range: [1990, 2027]
+    aliases: [date of joining, doj, joining date, start date, hire date, date joined, joined on]
+
+  date_of_birth:
+    label: Date of birth
+    type: date
+    date_range: [1945, 2010]
+    aliases: [date of birth, dob, birth date, birthday, born on]
+
+  employment_type:
+    label: Employment type
+    type: enum
+    values: [Full-Time, Part-Time, Contract, Intern]
+    synonyms:
+      Full-Time: [ft, full time, fulltime, permanent, regular, fte]
+      Part-Time: [pt, part time, parttime]
+      Contract: [contractor, contractual, consultant, temp, temporary, c2h]
+      Intern: [internship, trainee, apprentice]
+    aliases: [employment type, emp type, type, worker type, employee type, category]
+
+  manager_email:
+    label: Manager's email
+    type: email
+    email_kind: work
+    description: Work email of the employee's reporting manager (must exist in the target)
+    aliases: [manager email, reporting manager, manager, reports to, supervisor, line manager]
+
+  annual_salary:
+    label: Annual salary (INR)
+    type: money
+    min: 10000
+    aliases: [annual salary, salary, annual ctc, ctc, compensation, gross pay, annual pay]
+
+  location:
+    label: Work location
+    type: enum
+    values: [Bengaluru, Hyderabad, Mumbai, Pune, Delhi NCR, Chennai]
+    synonyms:
+      Bengaluru: [bangalore, blr, bengaluru]
+      Hyderabad: [hyd, secunderabad]
+      Mumbai: [bombay, navi mumbai]
+      Pune: [pun]
+      Delhi NCR: [delhi, new delhi, ncr, gurgaon, gurugram, noida]
+      Chennai: [madras]
+    aliases: [location, work location, base location, office, city, office location]
+
+  status:
+    label: Employment status
+    type: enum
+    required: true
+    default: Active
+    values: [Active, Inactive]
+    synonyms:
+      Active: [a, y, yes, 1, current, working, true]
+      Inactive: [i, n, no, 0, terminated, exited, resigned, left, false]
+    aliases: [status, employment status, emp status, active]
+
+# Source columns sometimes hold one value that the target splits into several fields.
+virtual_fields:
+  full_name:
+    label: Full name (split into first + last)
+    type: full_name
+    splits_into: [first_name, last_name]
+    aliases: [full name, name, employee name, emp name]

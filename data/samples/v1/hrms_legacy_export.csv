@@ -1,0 +1,52 @@
+Emp ID,Full Name,E-mail,Dept,Designation,DOJ,Birth Date,Mobile No,Status,Location,Blood Group
+EMP0001,Aadhya Menon,aadhya.menon@acmecorp.com,Engineering,VP Engineering,19/03/2016,02-Mar-1977,+91 95908 30166,Active,Noida,B-
+EMP0002,Sai Joshi,sai.joshi@acmecorp.com,BD,VP Sales,05/07/2014,20-Sep-1999,+91-9390996030,Y,Bangalore,A-
+EMP0003,Isha Menon,isha.menon@acmecorp.com,Mktg,Head of Marketing,17/08/2015,20-Oct-1993,099482-19935,Y,Noida,B-
+EMP0004,Ishaan Hegde,ishaan.hegde@acmecorp.com,People,Head of People,09/05/2014,25-Apr-2000,N/A,Y,Gurgaon,B+
+EMP0005,Nikhil Rao,nikhil.rao@acmecorp.com,Accounts,Finance Controller,15/05/2015,03-Sep-1978,+91-6574911862,A,Bombay,B+
+EMP0006,Diya Menon,diya.menon@acmecorp.com,Ops,Head of Operations,28/09/2016,01-Dec-1993,9895559797,Y,Chennai,A+
+EMP0007,Sai Reddy,sai.reddy@acmecorp.com,Operations,Operations Analyst,24/09/2015,21-Sep-1977,+91 64650 75291,active,Mumbai,A-
+EMP0007,Sai Reddy,sai.reddy@acmecorp.com,Operations,Operations Analyst,24/09/2015,21-Sep-1977,+91 64650 75291,active,Mumbai,A-
+EMP0008,Lakshmi Patel,Lakshmi.patel@ACMECORP.COM ,engineering,Senior Software Engineer,18/06/2019,15-Jul-1992,087684-26846,Active,BLR,AB+
+EMP0009,Saanvi Pandey,saanvi.pandey@acmecorp.com,Operations,Operations Executive,06/12/2015,27-Nov-1982,8079244026,N,Hyderabad,O-
+EMP0010,Nandini Pillai,nandini.pillai@acmecorp.com,Marketing,Marketing Specialist,20/08/2024,14-Feb-1998,9786666176,A,Chennai,B-
+EMP0011,Arjun Das,arjun.das@acmecorp.com,Tech,Senior Software Engineer,26/03/2016,03-Apr-1990,090928-15901,Active,Bengaluru,A-
+EMP0012,  priya   nair ,priya.nair@acmecorp.com,Ops,Operations Executive,11/02/2022,25-Apr-1986,+91 77117 77741,Y,Delhi,A-
+EMP0013,Karthik Nair,karthik.nair@acmecorp.com,People,Talent Acquisition Specialist,17/04/2024,28-Feb-1998,072808-41485,Y,Hyderabad,B-
+EMP0014,Siddharth Pillai,siddharth.pillai@acmecorp.com,Fin,Payroll Specialist,12/09/2018,02-Jan-1985,8633875004,Y,Hyd,A+
+EMP0015,Divya Kulkarni,divya.kulkarni@acmecorp.com,Engineering,QA Engineer,06/01/2020,05-Sep-1990,081373-53799,A,BLR,O-
+EMP0016,Aarav Kapoor,aarav.kapoor@acmecorp.com,Ops,Operations Analyst,14/12/2015,18-May-1980,+91-8726516761,active,Chennai,O-
+EMP0017,Siddharth Rao,siddharth.rao@acmecorp.com,Ops,Operations Analyst,21/03/2020,22-Jul-1981,98765,Y,Gurgaon,B+
+EMP0018,Rohan Mehta,rohan.mehta@acmecorp.com,Ops,Operations Executive,25/04/2015,19-Apr-1986,+91-8954862057,Active,Mumbai,AB+
+EMP0019,SWATI BANERJEE,swati.banerjee@acmecorp.com,Sales,Inside Sales Rep,19/06/2016,09-Nov-1998,097290-22279,Y,Gurgaon,AB+
+EMP0020,Kabir Hegde,kabir.hegde@acmecorp.com,Engineering,DevOps Engineer,18/10/2023,05-Oct-1979,8340187801,A,Bengaluru,O+
+EMP0021,Pooja Chatterjee,Pooja.chatterjee@ACMECORP.COM ,Marketing,Growth Manager,27/03/2017,08-Jun-1987,+91 68384 83726,active,Noida,B-
+EMP0022,Kabir Desai,kabir.desai@acmecorp.com,Sales,Account Executive,21/10/2019,13-Apr-1978,-,active,Chennai,AB+
+EMP0023,Kavya Kapoor,kavya.kapoor@acmecorp.com,Special Projects,Senior Software Engineer,23/10/2016,11-May-1994,+91-7635515058,A,Pune,B-
+EMP0024,Sneha Malhotra,sneha.malhotra@acmecorp.com,HR,HR Generalist,25/04/2018,23-Dec-1997,+91-8114402426,A,Bengaluru,AB+
+EMP0025,Pranav Desai,pranav.desai@acmecorp.com,Engg,DevOps Engineer,08/11/2022,02-Sep-1989,9261401419,Active,Mumbai,B+
+EMP0026,Harsh Reddy,harsh.reddy@acmecorp.co,Engineering,Software Engineer,21/10/2018,23-Oct-1999,+91-8083124023,N,Bombay,O-
+EMP0027,rajesh mishra,rajesh.mishra@acmecorp.com,Engineering,QA Engineer,10/08/2020,24-Dec-1982,9400088387,Active,Bombay,A-
+EMP0028,Nikhil Malhotra,nikhil.malhotra@acmecorp.com,engineering,DevOps Engineer,13/05/2022,16-Mar-1997,+91-7335326502,active,Pune,B-
+EMP0029,Rahul Verma,rahul.verma@acmecorp,Tech,QA Engineer,15/08/2015,16-Oct-1978,+91 79340 72247,A,Pune,AB+
+EMP0030,Aarav Kulkarni,aarav.kulkarni@acmecorp.com,Sales,Inside Sales Rep,18/08/2018,19-Dec-1985,+91-8520561748,Y,Mumbai,B-
+EMP0031,Manish Joshi,manish.joshi@acmecorp.com,Special Projects,Sales Manager,03/01/2016,15-Jun-1981,9604431982,Active,Delhi,B+
+EMP0032,Aishwarya Desai,aishwarya.desai@acmecorp.com,Accounts,Financial Analyst,04/09/2016,18-Dec-1976,+91-6828890931,Y,Chennai,A-
+EMP0033,Neha Gupta,"neha.gupta@acmecorp,com",Engg,QA Engineer,05/03/2016,23-Nov-1991,090837-40718,A,Gurgaon,O-
+EMP0034,Nandini Reddy,Nandini.reddy@ACMECORP.COM ,Marketing,Growth Manager,24/04/2020,24-Apr-1986,8337761740,Active,Mumbai,B-
+EMP0035,Bhavana Mishra,bhavana.mishra@acmecorp.com,Mktg,Marketing Specialist,20/09/2018,23-May-1986,+91 79920 70741,N,Chennai,A+
+EMP0036,DEEPAK PANDEY,deepak.pandey@acmecorp.com,sales,Sales Manager,18/03/2020,25-Nov-1995,8417047187,Active,Bangalore,A+
+EMP0037,Varun Desai,varun.desai@acmecorp.com,Engineering,Senior Software Engineer,02/11/2015,19-Jan-1979,+91-7529841537,A,Chennai,A+
+EMP0038,Ananya Iyer,ananya.iyer@acmecorp.com,Operations,Operations Executive,13/10/2016,28-Feb-1975,6642656515,active,Chennai,A+
+EMP0039,Aarav Chatterjee,aarav.chatterjee@acmecorp.com,Fin,Accountant,12/03/2017,12-Jul-1975,+91 71669 15640,Y,Mumbai,A+
+EMP0040,Amit Kumar,amit.kumar@acmecorp.com,Tech,QA Engineer,13/02/2022,05-Sep-1981,+91 68535 60688,Y,Bombay,AB+
+EMP0041,Deepak Reddy,deepak.reddy@acmecorp.com,engineering,DevOps Engineer,23/11/2021,20-Mar-1981,,A,Bombay,A+
+EMP0042,Pranav Mishra,pranav.mishra@acmecorp.com,Engg,QA Engineer,02/06/2020,01-Jan-2000,+91 92213 87837,active,Pune,B+
+EMP0043,Diya Malhotra,diya.malhotra@acmecorp.com,BD,Account Executive,07/01/2016,02-Nov-1982,095354-93066,active,Delhi,A-
+EMP0044,Amit Kumar,amit.kumar2@acmecorp.com,Sales,Sales Manager,11/01/2018,04-Mar-1990,079528-83143,A,Pune,AB+
+EMP0045,meera desai,meera.desai@acmecorp.com,Marketing,Content Strategist,08/07/2024,24-Dec-1975,+91-6797016877,A,Bengaluru,AB+
+EMP0046,Nikhil Nair,nikhil.nair@acmecorp.com,engineering,Software Engineer,03/04/2024,07-Jul-1995,+91-9023904248,Active,Delhi,B+
+EMP0047,Riya Saxena,riya.saxena@acmecorp.com,Finance,Financial Analyst,18/11/2020,23-Feb-2001,073900-84745,N,Pune,B-
+EMP0048,Nikhil Kapoor,nikhil.kapoor@acmecorp.com,sales,Account Executive,14/08/2019,15-Oct-1988,087614-36537,Y,Bangalore,A+
+EMP0049,Aditya Saxena,aditya.saxena@acmecorp.com,engineering,DevOps Engineer,22/03/2017,21-Apr-1975,9373433734,Y,Chennai,B+
+EMP0050,Vikram Singh,vikram.singh@acmecorp.com,Accounts,Payroll Specialist,23/07/2020,27-May-1983,+91-6092603092,A,Pune,AB+
