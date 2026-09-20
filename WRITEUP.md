@@ -36,7 +36,9 @@ so that line would move with the model.
 1. **A deterministic layer around the model.** Value profiling, schema validation, cross-file date evidence, and a
    rule that when sources conflict, the only valid value wins.
 2. **Learning from corrections.** Every resolution can become a rule. The client's re-export a month later asks
-   **1 question instead of 12**.
+   **1 question instead of 12**. Consultants can also write rules by hand. A rule is a standing permission to
+   decide alone, so each one is checked against the latest data (is it needed, what does it override) and reviewed
+   by the AI with cited facts before it can be saved. The AI advises; the consultant decides.
 3. **Incremental sync.** A diff against the target sends only changed fields, in dependency order (managers
    first). **Rollback** restores the exact previous state.
 
@@ -67,7 +69,7 @@ tampered API calls. It found and closed seven issues.
 
 - **Dry-run preview.** Show the full diff against the target for sign-off before the first push.
 - **Synonym-aware header matching** (cell = mobile), which would remove the last unneeded questions.
-- **Rule governance** per client, and **threshold calibration** from logged human overrides.
+- **Rules scoped per client**, and **threshold calibration** from logged human overrides.
 - **Bulk resolution.** Resolve similar cards in one action.
 - **Real connectors.** Auth, rate limits and idempotency against a real HRMS API.
 - **Production security.** SSO with roles and a second approver for irreversible actions. There is no

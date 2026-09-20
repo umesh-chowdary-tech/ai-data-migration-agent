@@ -121,9 +121,35 @@ shows them in plain English under *How it decides*.
 1. **A deterministic layer around the model.** The LLM is one of three signals. The other two, header aliases and
    value profiling, plus schema validation, cross-file date evidence and a "valid value wins" rule for conflicts,
    decide what's safe. `tests/test_llm_boundary.py` checks that a 99%-confident AI still can't break a tie.
-2. **Learning from corrections.** Every resolution can be remembered as a rule: column mapping, date format, value
-   fix, source of truth, duplicate decision or skip. Re-running the client's next export asks only about what's
-   *new*. In the sample, run 1 asks 12 questions and run 2 asks 1.
+2. **Learning from corrections.** Every resolution can be remembered as a rule. Re-running the client's next export
+   asks only about what's *new*. In the sample, run 1 asks 12 questions and run 2 asks 1.
+
+   A rule is kept at the level of generality the decision really had:
+
+   | Scope | Example | Used for |
+   |---|---|---|
+   | this employee | EMP0017's mobile = +91 98765 01234 | corrections of free-form values (phone, email, date). This is the default. |
+   | this exact value | Department "Special Projects" means Operations | category fields, where the word itself carries the meaning |
+   | this kind of problem | Whenever a mobile number isn't valid, leave it empty instead of asking | optional fields only, and the only action is "leave empty" |
+
+   An exact-value rule on a free-form field would be wrong. It would almost never fire again, and when it did, it
+   could copy one person's phone number onto someone else. So on cards about an employee's value, **Remember** asks
+   which scope you mean. Older exact-value rules on free-form fields are flagged in the rules tab, with a one-click
+   **Make it generic** option.
+
+   Consultants can also **add or edit rules by hand** in the *Learned rules* tab, for example to record what the
+   client said during onboarding. Every rule is a standing permission for the agent to decide alone, so a
+   hand-written rule is **checked before it can be saved**:
+
+   - **Validation.** It must be as valid as a decision on a card.
+   - **Impact on real data.** The latest run shows what it would do: whether the agent already decides this on its
+     own (so the rule isn't needed), whether it would override the evidence, and which employees it touches.
+   - **AI review.** The AI reads only those measured facts and must cite them (`F1`, `F2` …). It recommends,
+     advises caution, or advises against, but it can't block the rule.
+
+   Saving then requires a reason, and an explicit acknowledgement if there are warnings. The server saves only the
+   exact proposal that was reviewed. Rules about a single employee (skip, merge, per-record value) can't be created
+   by hand, only edited or deleted. Every change is kept in the rule's history.
 3. **Incremental (delta) sync.** Before pushing, the agent diffs each record against what's already in the target:
    unchanged records are skipped, changed ones are sent as updates that list exactly which fields changed, and new
    ones are created. Rollback reverses a run: records it created are deleted, and records it updated are restored
@@ -208,10 +234,15 @@ Each folder also has a `ground_truth.json`, written by the generator. It records
 
 1. *New migration → Sample client export.* Watch the live feed. The run pauses on **2 column-level questions**.
 2. *Contact Number* → **Correct** → *Mobile number* (add a note). *Joining Date* → **Approve** month-first.
-3. Let it push (managers first, a 503 retried). **10 cards** remain. Resolve a few: approve the email fix, merge
-   the duplicate, pick *Operations* for "Special Projects", type a phone number (try `12345` first to show
-   validation).
+3. Let it push (managers first, a 503 retried). **10 cards** remain. Resolve a few:
+   - approve the email fix;
+   - merge the duplicate;
+   - pick *Operations* for "Special Projects";
+   - type a phone number (try `12345` first to show validation);
+   - on the *joining date* conflict, choose **A different value** and give a reason.
 4. Open *Records* → a record's drawer (lineage + every change with its reason) → *Audit trail* → *Learned rules*.
+   Click **Add rule** and map column `Emp ID` to *Annual salary*. The data checks and the AI review both flag it as
+   harmful.
 5. *New migration → re-export (a month later)*. **1 question**, 3 updates, 1 create, 55 unchanged.
 6. *Target system → Simulate 20s outage*, resolve the last card → retries → failed → **Retry** → done.
    *Roll back this run* restores the previous versions.
@@ -231,7 +262,9 @@ backend/
     validate.py        schema validation, the single safe repair pass, fix suggestions
     escalations.py     escalation cards (question, reason, evidence, proposal, correction form)
     resolve.py         applying approve / correct / reject, saving learned rules, resuming the run
-    rules.py           learned rules store
+    rules.py           learned rules store + change history
+    rule_review.py     checks a hand-written rule: validation, measured impact on real data, AI review with citations
+    problems.py        problem types a "whenever this happens" rule can target (and which fields qualify)
     target.py          HTTP client for the target API
     llm.py             open-weight model fallback chain (Groq → OpenRouter → Ollama), error classification, cool-downs
 mock_api/app.py        stub of the new HR platform (409 / 422 / flaky 503 / outage switch)

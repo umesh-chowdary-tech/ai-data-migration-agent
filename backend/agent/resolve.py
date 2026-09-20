@@ -8,7 +8,8 @@ from __future__ import annotations
 from typing import Any
 
 from ..schema import load as load_schema, norm
-from . import clean, escalations as esc, pipeline, rules
+from . import clean, escalations as esc, pipeline, problems, rules
+from . import validate as validate_mod
 from .log import audit, emit
 from .records import Record
 
@@ -19,7 +20,13 @@ class InputError(ValueError):
     pass
 
 
-def resolve(esc_id: int, action: str, value: Any, note: str, remember: bool, actor: str) -> dict:
+SCOPED_TYPES = ("invalid_value", "validation", "push_failure")
+
+
+def resolve(esc_id: int, action: str, value: Any, note: str, remember: bool, actor: str,
+            scope: str | None = None) -> dict:
+    """scope (for cards about one employee's values): "record" = remember for this employee only (the default),
+    "problem" = remember as a rule for this kind of problem, for every employee (only 'leave it empty')."""
     e = esc.get(esc_id)
     if not e:
         raise InputError("Escalation not found")
@@ -33,15 +40,61 @@ def resolve(esc_id: int, action: str, value: Any, note: str, remember: bool, act
         value = e["proposal"]["value"]
     elif action == "reject":
         value = None
-    value = _check_input(e, action, value)
-    resolution = {"action": action, "value": value, "note": note, "remember": remember}
+    value = _check_input(e, action, value, note)
+    scope = scope or "record"
+    if scope not in ("record", "problem"):
+        raise InputError(f"Unknown scope '{scope}'")
+    if remember and scope == "problem" and not problem_targets(e, value):
+        raise InputError("A 'whenever this happens' rule only works when you leave an optional field empty - "
+                         "remember it for this employee instead")
+    resolution = {"action": action, "value": value, "note": note, "remember": remember,
+                  "scope": scope if e["type"] in SCOPED_TYPES else None}
     if not esc.claim(esc_id, resolution, actor):   # open -> processing; loses if someone else got there first
         raise InputError("This item was already resolved")
-    pipeline.in_background(e["run_id"], _apply, e, action, value, note, remember, actor)
+    pipeline.in_background(e["run_id"], _apply, e, action, value, note, remember, actor, scope)
     return esc.get(esc_id)
 
 
-def _check_input(e: dict, action: str, value: Any) -> Any:
+def _problem_candidates(e: dict) -> list[tuple[str, str]]:
+    c = e.get("context") or {}
+    if e["type"] == "invalid_value":
+        code = c.get("code")
+        schema = load_schema()
+        if not code and c.get("field") in schema.fields and c.get("raw") is not None:
+            code = problems.infer(schema.fields[c["field"]], c["raw"], schema)  # cards from older versions
+        return [(c.get("field"), code)]
+    if e["type"] == "validation":
+        return [(i.get("field"), i.get("code")) for i in c.get("issues", [])]
+    if e["type"] == "push_failure" and c.get("error") == "manager_not_found":
+        return [("manager_email", "manager_not_found")]
+    return []
+
+
+def problem_targets(e: dict, value: Any) -> list[tuple[str, str]]:
+    """(field, problem) pairs a 'whenever this happens' rule could cover for this decision."""
+    schema = load_schema()
+    if not isinstance(value, dict):
+        return []
+    return [(f, code) for f, code in _problem_candidates(e)
+            if f in schema.fields and f in value and value[f] is None and problems.eligible(schema.fields[f], code)]
+
+
+def remember_options(e: dict) -> list[dict] | None:
+    """What 'remember' can mean for this card - shown to the consultant so the scope is explicit."""
+    if e["type"] not in SCOPED_TYPES:
+        return None
+    schema = load_schema()
+    rec = (e.get("context") or {}).get("record") or {}
+    opts = [{"value": "record", "label": f"Only for {rec.get('key', 'this employee')} ({rec.get('name', '')})".replace(" ()", "")}]
+    for f, code in _problem_candidates(e):
+        if f in schema.fields and problems.eligible(schema.fields[f], code):
+            opts.append({"value": "problem", "field": f,
+                         "label": problems.describe(schema.fields[f], code) + " - for every employee"})
+            break
+    return opts
+
+
+def _check_input(e: dict, action: str, value: Any, note: str = "") -> Any:
     schema = load_schema()
     t = e["type"]
     if action == "reject":
@@ -59,7 +112,25 @@ def _check_input(e: dict, action: str, value: Any) -> Any:
         if value not in ("merge", "keep_both"):
             raise InputError("Choose merge or keep both")
     elif t == "conflict":
-        # Only the values the source files actually disagreed on may be chosen - never an arbitrary new value.
+        if isinstance(value, dict) and "other" in value:
+            # A value that is in NO source file: allowed where the card offers it, but it must pass the same checks
+            # as file data and the consultant must say why (it overrides every source).
+            if not (e["correct"] or {}).get("other"):
+                raise InputError("This item only accepts the values found in the source files")
+            if len((note or "").strip()) < 5:
+                raise InputError("Add a note explaining where this value comes from - it isn't in any source file")
+            f = schema.fields[e["context"]["field"]]
+            if value["other"] in (None, ""):
+                raise InputError(f"Enter the correct {f.label.lower()}")
+            try:
+                cleaned, _ = clean.clean_value(f, value["other"], schema, "DMY" if f.type == "date" else None)
+            except clean.CleanError as err:
+                raise InputError(f"{f.label}: {err.message}")
+            issues = validate_mod.field_issues(f.name, cleaned, schema)
+            if issues:
+                raise InputError(issues[0].message)
+            return {"other": cleaned}
+        # Otherwise only the values the source files actually disagreed on may be chosen.
         if value not in [o["value"] for o in e["context"].get("options", [])]:
             raise InputError("Pick one of the values found in the source files")
         return value
@@ -98,21 +169,29 @@ def _check_input(e: dict, action: str, value: Any) -> Any:
 
 
 def _describe(value: Any) -> str:
+    if isinstance(value, dict) and set(value) == {"other"}:
+        return f"{value['other']} (entered by hand - not from any source file)"
     if isinstance(value, dict):
         return ", ".join(f"{k} = {v if v is not None else '(empty)'}" for k, v in value.items())
     return str(value)
 
 
-def _apply(run_id: int, e: dict, action: str, value: Any, note: str, remember: bool, actor: str) -> None:
+def _apply(run_id: int, e: dict, action: str, value: Any, note: str, remember: bool, actor: str,
+           scope: str = "record") -> None:
     """Runs under the run lock: apply the decision, only then mark it resolved, only then let the agent continue."""
     status = {"approve": "approved", "correct": "corrected", "reject": "rejected"}[action]
     try:
-        then = _apply_effect(run_id, e, action, value, note, remember, actor)
+        then = _apply_effect(run_id, e, action, value, note, remember, actor, scope)
     except Exception:
         esc.reopen(e["id"])  # put the card back in the queue rather than losing the decision silently
         raise
-    esc.mark_resolved(e["id"], status, {"action": action, "value": value, "note": note, "remember": remember}, actor)
+    esc.mark_resolved(e["id"], status, {"action": action, "value": value, "note": note, "remember": remember,
+                                        "scope": scope if e["type"] in SCOPED_TYPES else None}, actor)
     then()
+
+
+def _shown(v: Any) -> str:
+    return "(leave empty)" if v is None or v == "" else str(v)
 
 
 def _after_column_decision(run_id: int) -> None:
@@ -124,7 +203,8 @@ def _after_column_decision(run_id: int) -> None:
         emit(run_id, "map", "info", f"{left} column-level decision(s) still open", pace=False)
 
 
-def _apply_effect(run_id: int, e: dict, action: str, value: Any, note: str, remember: bool, actor: str):
+def _apply_effect(run_id: int, e: dict, action: str, value: Any, note: str, remember: bool, actor: str,
+                  scope: str = "record"):
     """Persist the decision's effect; returns what the agent should do next."""
     t, ctx, keys = e["type"], e["context"], e["record_keys"]
     verb = {"approve": "approved", "correct": "corrected", "reject": "rejected"}[action]
@@ -161,12 +241,19 @@ def _apply_effect(run_id: int, e: dict, action: str, value: Any, note: str, reme
                        f"{ctx['label']} '{ctx['raw']}' means '{value}'", actor, run_id)
     elif t == "conflict":
         fname, r = ctx["field"], recs[keys[0]]
-        r.set(fname, value, f"decided by {actor} (sources disagreed)", by=actor)
-        r.save()
-        chosen = next((o for o in ctx["options"] if o["value"] == value), None)
-        if remember and chosen:
-            rules.save("source_priority", fname, chosen["files"][0],
-                       f"When files disagree on {ctx['label']}, trust {chosen['files'][0]}", actor, run_id)
+        if isinstance(value, dict) and "other" in value:
+            r.set(fname, value["other"], f"entered by {actor} - not from any source file ({note})", by=actor)
+            r.save()
+            if remember:  # no file "won", so the only thing to remember is this employee's value
+                rules.save("record_value", f"{r.key}|{fname}", value["other"],
+                           f"{r.key} {ctx['label']} = {value['other']}", actor, run_id)
+        else:
+            r.set(fname, value, f"decided by {actor} (sources disagreed)", by=actor)
+            r.save()
+            chosen = next((o for o in ctx["options"] if o["value"] == value), None)
+            if remember and chosen:
+                rules.save("source_priority", fname, chosen["files"][0],
+                           f"When files disagree on {ctx['label']}, trust {chosen['files'][0]}", actor, run_id)
     elif t == "duplicate":
         a, b = recs[keys[0]], recs[keys[1]]
         if value == "merge":
@@ -190,18 +277,18 @@ def _apply_effect(run_id: int, e: dict, action: str, value: Any, note: str, reme
             r.status = "failed"
             r.save()
         else:
-            failing = {i.get("field") for i in r.issues} | ({ctx.get("field")} if ctx.get("field") else set())
+            # Remembering a correction of a free-form value (phone, email, date...) is about THIS employee: an
+            # exact-value rule would copy one person's value onto anyone else with the same bad input.
+            covered = problem_targets(e, value) if remember and scope == "problem" else []
+            covered_fields = {f for f, _ in covered}
             for fname, v in value.items():
-                before = r.data.get(fname) if t != "invalid_value" else ctx.get("raw")
                 r.set(fname, v, f"corrected by {actor}", by=actor)
-                if remember:
-                    if before not in (None, "") and fname in failing:
-                        rules.save("value_map", f"{fname}|{clean.vkey(before)}", v,
-                                   f"{schema.fields[fname].label} '{before}' -> '{v}'", actor, run_id)
-                    else:
-                        rules.save("record_value", f"{r.key}|{fname}", v,
-                                   f"{r.key} {schema.fields[fname].label} = {v if v is not None else '(empty)'}",
-                                   actor, run_id)
+                if remember and fname not in covered_fields:
+                    rules.save("record_value", f"{r.key}|{fname}", v,
+                               f"{r.key} {schema.fields[fname].label} = {_shown(v)}", actor, run_id)
+            for fname, code in covered:
+                rules.save("issue_policy", f"{fname}|{code}", problems.ACTION,
+                           problems.describe(schema.fields[fname], code), actor, run_id)
             r.save()
     todo = keys if t != "duplicate" or value != "merge" else [keys[0]]
     return lambda: pipeline.process_records(run_id, todo)

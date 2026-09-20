@@ -19,7 +19,7 @@ import pandas as pd
 
 from .. import config, db
 from ..schema import TargetSchema, load as load_schema, norm
-from . import clean, escalations as esc, mapper, policy, rules
+from . import clean, escalations as esc, mapper, policy, problems, rules
 from . import validate as val
 from .llm import UNTRUSTED, AIResult, dig, get as get_llm
 from .log import audit, emit, set_stage
@@ -477,8 +477,9 @@ def reconcile(run_id: int, partials: list[dict], schema: TargetSchema) -> None:
         groups.setdefault(key, []).append(p)
     priority = rules.as_map("source_priority")
     record_rules = rules.as_map("record_value")
+    policies = rules.as_map("issue_policy")
     records: list[Record] = []
-    exact_dupes, multi_file, resolved_conflicts = [], 0, []
+    exact_dupes, multi_file, resolved_conflicts, cleared_by_policy = [], 0, [], []
     for key, parts in groups.items():
         unique: list[dict] = []
         for p in parts:
@@ -531,6 +532,14 @@ def reconcile(run_id: int, partials: list[dict], schema: TargetSchema) -> None:
                     rec.changes.append({"field": fname, "from": errs[0]["raw"], "to": rec.data.get(fname),
                                         "reason": f"ignored unparseable value from {errs[0]['file']} - another file has a valid one",
                                         "by": "agent", "ts": db.now()})
+                elif policies.get(f"{fname}|{errs[0]['code']}") == problems.ACTION and \
+                        problems.eligible(schema.fields[fname], errs[0]["code"]):
+                    # a "whenever this happens" rule: leave the optional field empty instead of asking
+                    rec.changes.append({"field": fname, "from": errs[0]["raw"], "to": None, "by": "agent",
+                                        "ts": db.now(), "reason": "cleared by your rule: "
+                                        + problems.describe(schema.fields[fname], errs[0]["code"]).lower()})
+                    rules.mark_applied("issue_policy", f"{fname}|{errs[0]['code']}")
+                    cleared_by_policy.append(f"{key} {fname}")
                 else:
                     rec.issues.append({**errs[0]})
         if rules.lookup("skip_record", key):
@@ -542,6 +551,8 @@ def reconcile(run_id: int, partials: list[dict], schema: TargetSchema) -> None:
             if rk in record_rules:
                 rec.set(fname, record_rules[rk], "rule you taught me earlier")
                 rules.mark_applied("record_value", rk)
+                # an employee-specific rule answers any open question about that field
+                rec.issues = [i for i in rec.issues if i.get("field") != fname]
         records.append(rec)
 
     if exact_dupes:
@@ -549,6 +560,9 @@ def reconcile(run_id: int, partials: list[dict], schema: TargetSchema) -> None:
              category="duplicate_exact", pace=False)
         audit(run_id, "agent", "merged exact duplicates", ", ".join(exact_dupes),
               reason="same employee ID and identical values in the same file")
+    if cleared_by_policy:
+        emit(run_id, "reconcile", "auto", f"Left {len(cleared_by_policy)} unusable value(s) empty because of a problem "
+                                          f"rule you set: {', '.join(cleared_by_policy)}", category="rule", pace=False)
     if resolved_conflicts:
         emit(run_id, "reconcile", "auto", f"Resolved {len(resolved_conflicts)} source conflict(s) where only one file had "
                                           f"a valid value: {', '.join(resolved_conflicts)}", category="conflict_valid",
@@ -692,7 +706,10 @@ def _escalate_record_issues(run_id: int, records: list[Record], schema: TargetSc
                            "source of truth for this field",
                     context={"record": _summary(r), "field": issue["field"], "label": f.label, "options": opts},
                     proposal={"label": f"Use {opts[0]['label']}", "value": opts[0]["value"], "confidence": 0.5},
-                    correct=esc.choice(opts), reject_label="Don't migrate this employee", record_keys=[r.key],
+                    # "other": the consultant may know that every file is wrong - allowed, but validated + needs a note
+                    correct={**esc.choice(opts), "other": {"field": f.name, "label": f.label, "type": f.type,
+                                                           "options": f.values or None}},
+                    reject_label="Don't migrate this employee", record_keys=[r.key],
                     dedupe_key=f"conflict|{r.key}|{issue['field']}", stage="reconcile")
             elif code == "duplicate":
                 pair = tuple(sorted((r.key, issue["with"])))
@@ -724,7 +741,7 @@ def _escalate_record_issues(run_id: int, records: list[Record], schema: TargetSc
                     question=f"What should {r.name}'s {f.label.lower()} be?",
                     reason=f"{issue['message']} - it isn't a placeholder like N/A, so dropping it silently would lose data",
                     context={"record": _summary(r), "field": issue["field"], "label": f.label, "raw": issue["raw"],
-                             "file": issue.get("file")},
+                             "file": issue.get("file"), "code": issue.get("code")},
                     proposal=proposal,
                     correct=esc.field_form([_form_field(f, issue["raw"])]),
                     reject_label="Don't migrate this employee", record_keys=[r.key],
@@ -895,6 +912,17 @@ def _push_one(run_id, r: Record, schema, client: TargetClient, target_map, by_ke
             audit(run_id, "agent", "push_retry", r.key, after={"status": res.status, "error": res.message},
                   reason="transient error - retried with backoff")
             time.sleep(policy.PUSH_BACKOFF_SECONDS * attempt)
+            continue
+        rule_key = f"manager_email|{res.error_code}"
+        if res.error_code == "manager_not_found" and payload.get("manager_email") and \
+                rules.lookup("issue_policy", rule_key) == problems.ACTION and attempt < policy.PUSH_MAX_ATTEMPTS:
+            # a problem rule the consultant set: clear the unknown manager and push again instead of asking
+            r.set("manager_email", None, "cleared by your rule: " +
+                  problems.describe(schema.fields["manager_email"], "manager_not_found").lower())
+            payload.pop("manager_email")
+            rules.mark_applied("issue_policy", rule_key)
+            emit(run_id, "push", "auto", f"{r.key}: manager isn't in the target - cleared it (rule you set) and "
+                                         "pushing again", category="rule", pace=False)
             continue
         break
     r.status, r.push_op, r.last_error = "failed", op, f"{res.status or 'network'}: {res.message}"

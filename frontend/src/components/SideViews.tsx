@@ -1,46 +1,7 @@
 import { useEffect, useState } from "react";
-import { Brain, CloudOff, Database, Hand, Sparkles, Trash2 } from "lucide-react";
-import type { Rule } from "../api";
-import { api, fmtTime, fmtValue } from "../api";
-import { Badge, Button, Card, Empty } from "./ui";
-
-const KIND: Record<string, string> = {
-  column_map: "Column mapping", date_format: "Date format", value_map: "Value fix", record_value: "Record fix",
-  source_priority: "Source of truth", duplicate: "Duplicate decision", skip_record: "Skip record",
-};
-
-export function RulesView({ rules, onChanged }: { rules: Rule[]; onChanged: () => void }) {
-  if (!rules.length)
-    return (
-      <Empty icon={<Brain className="h-10 w-10" />} title="No learned rules yet">
-        When you resolve an escalation with "Remember for future runs" ticked, the decision is stored here and applied automatically next time.
-      </Empty>
-    );
-  return (
-    <Card className="overflow-hidden">
-      <table className="w-full text-sm">
-        <thead className="bg-slate-50 text-left text-xs text-slate-500">
-          <tr><th className="px-3 py-2 font-medium">Type</th><th className="px-2 py-2 font-medium">Rule</th><th className="px-2 py-2 font-medium">Taught by</th><th className="px-2 py-2 font-medium">Used</th><th /></tr>
-        </thead>
-        <tbody>
-          {rules.map((r) => (
-            <tr key={r.id} className="border-t border-slate-100">
-              <td className="px-3 py-2"><Badge tone="sky">{KIND[r.kind] ?? r.kind}</Badge></td>
-              <td className="px-2 py-2 text-slate-700">{r.description}</td>
-              <td className="px-2 py-2 text-xs text-slate-500">{r.created_by} · run #{r.source_run} · {fmtTime(r.created_at)}</td>
-              <td className="px-2 py-2 text-xs text-slate-500">{r.times_applied}×</td>
-              <td className="px-2 py-2 text-right">
-                <button title="Forget this rule" onClick={async () => { await api.deleteRule(r.id); onChanged(); }} className="rounded p-1 text-slate-400 hover:bg-rose-50 hover:text-rose-600">
-                  <Trash2 className="h-4 w-4" />
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </Card>
-  );
-}
+import { CloudOff, Database, Hand, Sparkles } from "lucide-react";
+import { api, fmtValue } from "../api";
+import { Badge, Button, Card } from "./ui";
 
 export function TargetView({ refreshKey }: { refreshKey: number }) {
   const [rows, setRows] = useState<Record<string, any>[]>([]);

@@ -10,7 +10,8 @@ import { MappingsView } from "./components/MappingsView";
 import { NewRunDialog } from "./components/NewRunDialog";
 import { RecordsView } from "./components/RecordsView";
 import { RunHeader } from "./components/RunHeader";
-import { PolicyView, RulesView, TargetView } from "./components/SideViews";
+import { RulesView } from "./components/RulesView";
+import { PolicyView, TargetView } from "./components/SideViews";
 import { Button, Card, RUN_STATUS, cx } from "./components/ui";
 
 type Tab = "queue" | "mapping" | "records" | "audit" | "target" | "rules" | "policy";
@@ -172,7 +173,7 @@ export default function App() {
                 {tab === "records" && <RecordsView run={run} records={records} schema={schema} actor={actor} onChanged={bump} />}
                 {tab === "audit" && <AuditView entries={audit} runId={run.id} />}
                 {tab === "target" && <TargetView refreshKey={refreshKey} />}
-                {tab === "rules" && <RulesView rules={rules} onChanged={bump} />}
+                {tab === "rules" && <RulesView rules={rules} actor={actor} onChanged={() => { api.rules().then(setRules); bump(); }} />}
                 {tab === "policy" && <PolicyView />}
               </div>
             )}

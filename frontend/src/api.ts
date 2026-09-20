@@ -43,9 +43,14 @@ export interface Escalation {
   id: number; run_id: number; type: string; type_label: string; status: string; blocking: boolean;
   title: string; question: string; reason: string; context: any;
   proposal: { label: string; value: any; confidence?: number; details?: string[] } | null;
-  correct: { kind: "choice"; options: Option[]; more?: Option[] } | { kind: "fields"; fields: FormField[] } | null;
+  correct:
+    | { kind: "choice"; options: Option[]; more?: Option[]; other?: { field: string; label: string; type: string; options: string[] | null } }
+    | { kind: "fields"; fields: FormField[] }
+    | null;
   reject_label: string; record_keys: string[]; resolution: any; resolved_by: string | null;
   created_at: number; resolved_at: number | null;
+  /** what "remember" can mean for this card: this employee only, or this kind of problem for everyone */
+  remember_options?: { value: "record" | "problem"; label: string; field?: string }[] | null;
 }
 
 export interface Mapping {
@@ -68,7 +73,33 @@ export interface AuditEntry {
 
 export interface Rule {
   id: number; kind: string; key: string; value: any; description: string; created_by: string; created_at: number;
-  source_run: number; times_applied: number;
+  source_run: number | null; times_applied: number; origin: "decision" | "manual"; reason: string | null;
+  updated_at: number | null; updated_by: string | null;
+}
+
+export interface RuleEvent {
+  id: number; ts: number; actor: string; action: "created" | "edited" | "deleted"; before: any; after: any;
+  reason: string | null; review: any;
+}
+
+export interface RuleFact { id: string; level: "info" | "ok" | "warn"; text: string }
+export interface Cited { text: string; cites: string[] }
+export interface RuleReview {
+  id: string; needed: "yes" | "no" | "overrides" | "unknown"; needs_acknowledgement: boolean; facts: RuleFact[];
+  proposal: { kind: string; key: string; value: any; description: string; rule_id: number | null; before: any };
+  ai: {
+    available: boolean; reason?: string; model?: string; fell_back?: boolean;
+    verdict?: "recommend" | "caution" | "not_recommended"; needed?: "yes" | "no" | "unclear"; summary?: string;
+    effects?: Cited[]; risks?: Cited[];
+  };
+}
+
+export interface RulesContext {
+  fields: { name: string; label: string; type: string; values: string[]; required: boolean;
+    problems: { code: string; label: string }[] }[];
+  targets: { name: string; label: string }[];
+  headers: { file: string; column: string; target: string | null; run_id: number; is_date: boolean }[];
+  files: string[];
 }
 
 export interface SchemaField { name: string; label: string; type: string; required: boolean; values: string[] }
@@ -103,11 +134,19 @@ export const api = {
   records: (id: number) => request<RecordRow[]>(`/api/runs/${id}/records`),
   audit: (id: number) => request<AuditEntry[]>(`/api/runs/${id}/audit`),
   rules: () => request<Rule[]>("/api/rules"),
-  deleteRule: (id: number) => request(`/api/rules/${id}`, { method: "DELETE" }),
+  rulesContext: () => request<RulesContext>("/api/rules/context"),
+  reviewRule: (proposal: Record<string, any>) => post<RuleReview>("/api/rules/review", proposal),
+  saveRule: (body: { review_id: string; reason: string; actor: string; acknowledge: boolean }) =>
+    post<Rule>("/api/rules/save", body),
+  ruleHistory: (id: number) => request<RuleEvent[]>(`/api/rules/${id}/history`),
+  generalizeRule: (id: number) =>
+    request<{ field: string; problem: string; description: string; replaces: number; note: string | null }>(`/api/rules/${id}/generalize`),
+  deleteRule: (id: number, actor: string, reason: string) =>
+    request(`/api/rules/${id}?actor=${encodeURIComponent(actor)}&reason=${encodeURIComponent(reason)}`, { method: "DELETE" }),
   target: () => request<Record<string, any>[]>("/api/target/employees"),
   targetStatus: () => request<{ outage: boolean; outage_seconds_left: number }>("/api/target/status"),
   outage: (seconds: number) => post(`/api/target/outage?seconds=${seconds}`),
-  resolve: (id: number, body: { action: string; value?: any; note?: string; remember?: boolean; actor: string }) =>
+  resolve: (id: number, body: { action: string; value?: any; note?: string; remember?: boolean; scope?: string; actor: string }) =>
     post<Escalation>(`/api/escalations/${id}/resolve`, body),
   retry: (runId: number, keys: string[] | null, actor: string) => post(`/api/runs/${runId}/retry`, { keys, actor }),
   rollback: (runId: number, keys: string[] | null, actor: string) => post(`/api/runs/${runId}/rollback`, { keys, actor }),

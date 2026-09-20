@@ -13,17 +13,24 @@ export function EscalationCard({ e, actor, onResolved }: { e: Escalation; actor:
   const [mode, setMode] = useState<null | "correct" | "reject">(null);
   const [choice, setChoice] = useState<any>(() => (e.correct?.kind === "choice" ? e.proposal?.value ?? e.correct.options[0]?.value : undefined));
   const [fields, setFields] = useState<Record<string, any>>(() => initialFields(e));
+  const [other, setOther] = useState("");
   const [note, setNote] = useState("");
   const [remember, setRemember] = useState(true);
+  // cards about one employee's value: remember for this employee (default), for this kind of problem, or not at all
+  const [scope, setScope] = useState<"none" | "record" | "problem">("record");
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const otherChosen = mode === "correct" && choice === OTHER;
 
   async function submit(action: "approve" | "correct" | "reject") {
     setBusy(action);
     setError(null);
     try {
-      const value = action !== "correct" ? undefined : e.correct?.kind === "choice" ? choice : fields;
-      await api.resolve(e.id, { action, value, note, remember, actor });
+      const value = action !== "correct" ? undefined
+        : e.correct?.kind === "choice" ? (choice === OTHER ? { other } : choice) : fields;
+      await api.resolve(e.id, e.remember_options
+        ? { action, value, note, remember: scope !== "none", scope: scope === "none" ? undefined : scope, actor }
+        : { action, value, note, remember, actor });
       onResolved();
     } catch (err: any) {
       setError(err.message);
@@ -68,7 +75,8 @@ export function EscalationCard({ e, actor, onResolved }: { e: Escalation; actor:
       {mode === "correct" && e.correct && (
         <div className="border-t border-slate-100 bg-slate-50/60 px-4 py-3">
           {e.correct.kind === "choice" ? (
-            <ChoiceInput options={e.correct.options} more={e.correct.more} value={choice} onChange={setChoice} />
+            <ChoiceInput options={e.correct.options} more={e.correct.more} value={choice} onChange={setChoice}
+              other={e.correct.other} otherValue={other} onOther={setOther} />
           ) : (
             <FieldsInput fields={e.correct.fields} values={fields} onChange={setFields} />
           )}
@@ -82,12 +90,25 @@ export function EscalationCard({ e, actor, onResolved }: { e: Escalation; actor:
 
       <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 px-4 py-3">
         <div className="flex flex-1 flex-wrap items-center gap-3">
-          <input value={note} onChange={(ev) => setNote(ev.target.value)} placeholder="Note for the audit trail (optional)"
-            className="min-w-[180px] flex-1 rounded-lg border-0 px-2.5 py-1.5 text-sm ring-1 ring-slate-200 focus:ring-2 focus:ring-indigo-500" />
-          <label className="flex items-center gap-1.5 text-xs text-slate-600" title="Next time the same situation appears, the agent applies your decision automatically">
-            <input type="checkbox" checked={remember} onChange={(ev) => setRemember(ev.target.checked)} className="rounded accent-indigo-600" />
-            Remember for future runs
-          </label>
+          <input value={note} onChange={(ev) => setNote(ev.target.value)}
+            placeholder={otherChosen ? "Required: where does this value come from?" : "Note for the audit trail (optional)"}
+            className={cx("min-w-[180px] flex-1 rounded-lg border-0 px-2.5 py-1.5 text-sm ring-1 focus:ring-2 focus:ring-indigo-500",
+              otherChosen && note.trim().length < 5 ? "ring-amber-400" : "ring-slate-200")} />
+          {e.remember_options ? (
+            <label className="flex items-center gap-1.5 text-xs text-slate-600" title="What should the agent do automatically next time?">
+              Remember:
+              <select value={scope} onChange={(ev) => setScope(ev.target.value as any)}
+                className="max-w-[340px] rounded-lg border-0 py-1 pr-7 pl-2 text-xs ring-1 ring-slate-200 focus:ring-2 focus:ring-indigo-500">
+                {e.remember_options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+                <option value="none">Don't remember</option>
+              </select>
+            </label>
+          ) : (
+            <label className="flex items-center gap-1.5 text-xs text-slate-600" title="Next time the same situation appears, the agent applies your decision automatically">
+              <input type="checkbox" checked={remember} onChange={(ev) => setRemember(ev.target.checked)} className="rounded accent-indigo-600" />
+              Remember for future runs
+            </label>
+          )}
         </div>
         <div className="flex flex-wrap gap-2">
           {mode === null && (
@@ -126,11 +147,36 @@ function initialFields(e: Escalation): Record<string, any> {
   return out;
 }
 
-function ChoiceInput({ options, more, value, onChange }: { options: any[]; more?: any[]; value: any; onChange: (v: any) => void }) {
+const OTHER = "__other__";
+
+function ChoiceInput({ options, more, value, onChange, other, otherValue, onOther }: {
+  options: any[]; more?: any[]; value: any; onChange: (v: any) => void;
+  other?: { label: string; type: string; options: string[] | null }; otherValue?: string; onOther?: (v: string) => void;
+}) {
   const inMore = more?.some((o) => o.value === value);
+  const input = "rounded-lg border-0 bg-white px-2.5 py-1.5 text-sm ring-1 ring-slate-200 focus:ring-2 focus:ring-indigo-500";
   return (
-    <div className="space-y-1.5">
+    <div className="flex flex-col gap-1.5">
       <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">Choose the correct answer</div>
+      {other && (
+        <label className={cx("order-last flex cursor-pointer items-start gap-2 rounded-lg bg-white px-3 py-2 ring-1",
+          value === OTHER ? "ring-2 ring-indigo-500" : "ring-slate-200 hover:ring-slate-300")}>
+          <input type="radio" aria-label="A different value" className="mt-1 accent-indigo-600" checked={value === OTHER} onChange={() => onChange(OTHER)} />
+          <div className="min-w-0 flex-1">
+            <div className="text-sm font-medium text-slate-800">A different value - neither file is right</div>
+            <div className="text-xs text-slate-500">It's checked like file data, marked as "entered by hand" in the audit trail, and needs a note.</div>
+            {value === OTHER && (other.options ? (
+              <select value={otherValue ?? ""} onChange={(ev) => onOther?.(ev.target.value)} className={cx(input, "mt-1.5")}>
+                <option value="">choose...</option>
+                {other.options.map((o) => <option key={o} value={o}>{o}</option>)}
+              </select>
+            ) : (
+              <input type={other.type === "date" ? "date" : "text"} value={otherValue ?? ""} onChange={(ev) => onOther?.(ev.target.value)}
+                className={cx(input, "mt-1.5 w-56 font-mono")} placeholder={`correct ${other.label.toLowerCase()}`} />
+            ))}
+          </div>
+        </label>
+      )}
       {options.map((o) => (
         <label key={String(o.value)} className={cx("flex cursor-pointer items-start gap-2 rounded-lg bg-white px-3 py-2 ring-1",
           value === o.value ? "ring-2 ring-indigo-500" : "ring-slate-200 hover:ring-slate-300")}>

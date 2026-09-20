@@ -89,12 +89,19 @@ def repair(record: Record, issues: list[Issue], schema: TargetSchema) -> list[st
         if issue.code == "missing" and f.default is not None:
             record.set(issue.field, f.default, f"schema default for missing {f.label.lower()}")
             notes.append(f"{f.label}: filled schema default '{f.default}'")
-        elif f.type == "email" and issue.code == "email_format" and current:
+            continue
+        if f.type == "email" and issue.code == "email_format" and current:
             fixed = str(current).replace(" ", "").replace(",", ".").replace("@@", "@").rstrip(".")
             fixed = re.sub(r"\.{2,}", ".", fixed)
             if fixed != current and clean.EMAIL_STRICT.match(fixed):
                 record.set(issue.field, fixed, "syntax repair (stray comma/space/dot)")
                 notes.append(f"{f.label}: '{current}' -> '{fixed}'")
+                continue
+        # A "whenever this happens" rule the consultant set: an unusable OPTIONAL value is left empty, not asked about.
+        if current is not None and not f.required and rules.lookup("issue_policy", f"{issue.field}|{issue.code}") == "clear":
+            record.set(issue.field, None, f"cleared by your rule ({issue.code.replace('_', ' ')}: leave it empty)")
+            rules.mark_applied("issue_policy", f"{issue.field}|{issue.code}")
+            notes.append(f"{f.label}: left empty by your problem rule")
     return notes
 
 

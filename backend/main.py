@@ -23,7 +23,7 @@ from mock_api.app import app as mock_app
 
 from . import config, db
 from .agent import escalations as esc
-from .agent import pipeline, policy, resolve, rules
+from .agent import pipeline, policy, problems, resolve, rule_review, rules
 from .agent.llm import get as get_llm, reload_from_env as reload_llm
 from .agent.records import Record
 from .agent.target import get_client
@@ -223,7 +223,10 @@ async def stream(run_id: int, request: Request):
 
 @app.get("/api/runs/{run_id}/escalations")
 def get_escalations(run_id: int, status: str | None = None):
-    return esc.list_for_run(run_id, status)
+    items = esc.list_for_run(run_id, status)
+    for e in items:
+        e["remember_options"] = resolve.remember_options(e)
+    return items
 
 
 @app.get("/api/runs/{run_id}/mappings")
@@ -275,6 +278,7 @@ class ResolveIn(BaseModel):
     value: Any = None
     note: str = ""
     remember: bool = True
+    scope: str | None = None  # "record" (default) | "problem"
     actor: str = "Consultant"
 
 
@@ -282,7 +286,7 @@ class ResolveIn(BaseModel):
 def resolve_escalation(esc_id: int, body: ResolveIn):
     try:
         return resolve.resolve(esc_id, body.action, body.value, body.note.strip(), body.remember,
-                               body.actor.strip() or "Consultant")
+                               body.actor.strip() or "Consultant", body.scope)
     except resolve.InputError as exc:
         raise HTTPException(400, str(exc))
 
@@ -315,9 +319,83 @@ def list_rules():
     return rules.get_all()
 
 
+@app.get("/api/rules/context")
+def rules_context():
+    """What the rule forms offer: target fields, and the headers / files seen in recent runs."""
+    s = load_schema()
+    seen = db.query("SELECT file, source_column, target_field, MAX(run_id) AS run_id FROM mappings "
+                    "GROUP BY file, source_column ORDER BY run_id DESC, file, source_column")
+    return {
+        "fields": [{"name": f.name, "label": f.label, "type": f.type, "values": f.values, "required": f.required,
+                    "problems": problems.for_field(f)} for f in s.fields.values()],
+        "targets": [{"name": f.name, "label": f.label} for f in s.all_mappable.values()],
+        "headers": [{"file": r["file"], "column": r["source_column"], "target": r["target_field"], "run_id": r["run_id"],
+                     "is_date": bool(r["target_field"]) and s.all_mappable[r["target_field"]].type == "date"}
+                    for r in seen],
+        "files": sorted({r["file"] for r in seen}),
+        "pattern_kinds": list(rules.PATTERN_KINDS),
+    }
+
+
+class RuleProposal(BaseModel):
+    rule_id: int | None = None
+    kind: str | None = None
+    header: str | None = None
+    target: str | None = None
+    format: str | None = None
+    field: str | None = None
+    raw: str | None = None
+    value: Any = None
+    file: str | None = None
+    problem: str | None = None
+    replaces: int | None = None
+
+
+@app.post("/api/rules/review")
+def review_rule(body: RuleProposal):
+    """Validate + measure the impact on real data + AI review. Nothing is saved."""
+    try:
+        return rule_review.review(body.model_dump())
+    except rule_review.RuleError as exc:
+        raise HTTPException(400, str(exc))
+
+
+class RuleSave(BaseModel):
+    review_id: str
+    reason: str = ""
+    actor: str = "Consultant"
+    acknowledge: bool = False
+
+
+@app.post("/api/rules/save")
+def save_rule(body: RuleSave):
+    """Saves exactly the proposal that was reviewed - the client can't swap in a different rule."""
+    try:
+        return rule_review.save(body.review_id, body.reason, body.actor.strip() or "Consultant", body.acknowledge)
+    except rule_review.RuleError as exc:
+        raise HTTPException(400, str(exc))
+
+
+@app.get("/api/rules/{rule_id}/history")
+def rule_history(rule_id: int):
+    return rules.history(rule_id)
+
+
+@app.get("/api/rules/{rule_id}/generalize")
+def generalize_rule(rule_id: int):
+    """For an exact-value rule on a free-form field: which 'whenever this happens' rule would it become?"""
+    try:
+        return rule_review.generalisation(rule_id)
+    except rule_review.RuleError as exc:
+        raise HTTPException(400, str(exc))
+
+
 @app.delete("/api/rules/{rule_id}")
-def delete_rule(rule_id: int):
-    rules.delete(rule_id)
+def delete_rule(rule_id: int, actor: str = "Consultant", reason: str = ""):
+    # Deleting only makes the agent ask again - the safe direction - so it needs no review, just a trace.
+    if not rules.get(rule_id):
+        raise HTTPException(404, "Rule not found")
+    rules.delete(rule_id, actor, reason or None)
     return {"ok": True}
 
 

@@ -54,7 +54,13 @@ CREATE TABLE IF NOT EXISTS rules (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     kind TEXT, key TEXT, value_json TEXT, description TEXT, created_by TEXT,
     created_at REAL, source_run INTEGER, times_applied INTEGER DEFAULT 0,
+    origin TEXT DEFAULT 'decision', reason TEXT, updated_at REAL, updated_by TEXT,
     UNIQUE(kind, key)
+);
+CREATE TABLE IF NOT EXISTS rule_events (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    rule_id INTEGER, kind TEXT, key TEXT, ts REAL, actor TEXT, action TEXT,
+    before_json TEXT, after_json TEXT, reason TEXT, review_json TEXT
 );
 """
 
@@ -73,6 +79,14 @@ def init() -> None:
         cols = {r["name"] for r in conn.execute("PRAGMA table_info(runs)")}
         if "ai_json" not in cols:  # added later: which AI answered during the run (or that none did)
             conn.execute("ALTER TABLE runs ADD COLUMN ai_json TEXT")
+        rule_cols = {r["name"] for r in conn.execute("PRAGMA table_info(rules)")}
+        for col, ddl in (("origin", "TEXT DEFAULT 'decision'"), ("reason", "TEXT"), ("updated_at", "REAL"),
+                         ("updated_by", "TEXT")):
+            if col not in rule_cols:  # added later: manual rules + edit history
+                conn.execute(f"ALTER TABLE rules ADD COLUMN {col} {ddl}")
+        # older versions described an empty value as the word 'None'
+        conn.execute("UPDATE rules SET description = REPLACE(description, '''None''', '(leave empty)') "
+                     "WHERE value_json = 'null' AND description LIKE '%''None''%'")
 
 
 def execute(sql: str, params: Iterable[Any] = ()) -> int:
@@ -130,7 +144,7 @@ def reset_all() -> None:
     with _lock:
         conn = connect()
         try:
-            for table in ("runs", "events", "mappings", "records", "escalations", "audit", "rules"):
+            for table in ("runs", "events", "mappings", "records", "escalations", "audit", "rules", "rule_events"):
                 conn.execute(f"DELETE FROM {table}")
             conn.execute("DELETE FROM sqlite_sequence")
             conn.commit()

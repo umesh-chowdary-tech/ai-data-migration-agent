@@ -169,6 +169,47 @@ The adversarial suite ([`tests/test_security.py`](tests/test_security.py)) attac
 | Upload paths are confined to the run folder | PASS |
 | Uploads are type and size limited | PASS |
 
+**Hand-written rules** ([`tests/test_rules.py`](tests/test_rules.py)). A rule lets the agent decide alone, so a rule written by hand is checked before it can be saved:
+
+- it must be as valid as a decision taken on a card;
+- its impact is measured on real data: whether it's needed, what it overrides, and whom it affects;
+- an AI reviews it, citing those measured facts. The AI advises but can't block.
+
+Only the exact reviewed proposal can be saved, and warnings must be acknowledged. Rules about a single employee can't be created by hand at all.
+
+A remembered decision is stored at the scope it really had:
+
+- **this employee** is the default for free-form values;
+- **this exact value** applies to category fields only;
+- **this kind of problem** applies to optional fields only, and can only leave the value empty.
+
+This stops an exact-value rule from copying one person's phone number onto another employee.
+
+| Check | Result |
+|---|---|
+| Rules about one employee cannot be added by hand | PASS |
+| Invalid rules are rejected | PASS |
+| A rule the data already decides is flagged as not needed | PASS |
+| A rule overriding the evidence must be acknowledged | PASS |
+| A useful rule is recognised with its real impact | PASS |
+| A date rule on a proven column is flagged | PASS |
+| A manual rule takes effect on the next run | PASS |
+| AI review citations are checked and verdicts sanitised | PASS |
+| Without AI the review is the data checks alone | PASS |
+| Only a reviewed proposal can be saved | PASS |
+| Editing a rule that changed since review is refused | PASS |
+| Rule history records create edit delete | PASS |
+| Remembering a typed fix is specific to that employee | PASS |
+| Leave empty can be remembered as a problem rule for everyone | PASS |
+| Problem scope is refused when a real value was typed | PASS |
+| Required fields never get a problem rule | PASS |
+| Unknown manager rule clears the manager at push time | PASS |
+| An old exact value rule can be made generic | PASS |
+| Problem rule review shows where it would have lost data | PASS |
+| Problem rule review finds cases on cards from older versions | PASS |
+| Empty values are described as leave empty | PASS |
+| Conflict other value needs a valid value and a note | PASS |
+
 **Issues found and fixed while building this evaluation:**
 
 | Issue | Risk | Fix |
@@ -211,7 +252,7 @@ The golden runs also exercise the flaky target: 96 transient 503s were retried a
 
 ## Full test suite
 
-**27/27 tests pass.**
+**49/49 tests pass.**
 
 | File | Passed | Failed |
 |---|---|---|
@@ -220,6 +261,7 @@ The golden runs also exercise the flaky target: 96 transient 503s were retried a
 | `test_llm_boundary` | 1 | 0 |
 | `test_llm_fallback` | 10 | 0 |
 | `test_resilience` | 2 | 0 |
+| `test_rules` | 22 | 0 |
 | `test_security` | 11 | 0 |
 
 ## What this evaluation does *not* show
