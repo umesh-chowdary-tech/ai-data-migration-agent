@@ -253,6 +253,21 @@ def test_upload_paths_are_confined_to_the_run_folder(api):
     assert not (config.RUNS_DIR.parent / "escape.csv").exists()
 
 
+def test_reset_needs_an_explicit_confirmation(api):
+    run_with_files(sample_files())
+    assert api.post("/api/reset").status_code == 400            # a stray POST can't wipe a demo
+    assert db.one("SELECT COUNT(*) AS n FROM runs")["n"] == 1
+    assert api.post("/api/reset?confirm=yes").status_code == 200
+    assert db.one("SELECT COUNT(*) AS n FROM runs")["n"] == 0
+
+
+def test_public_demo_can_limit_how_many_migrations_one_visitor_starts(api, monkeypatch):
+    monkeypatch.setattr(config, "MAX_RUNS_PER_HOUR", 2)
+    csv = (SAMPLE / "onboarding_tracker.csv").read_bytes()
+    codes = [api.post("/api/runs", files={"files": ("a.csv", csv, "text/csv")}).status_code for _ in range(3)]
+    assert codes == [200, 200, 429]
+
+
 def test_uploads_are_type_and_size_limited(api, monkeypatch):
     before = db.one("SELECT COUNT(*) AS n FROM runs")["n"]
     assert api.post("/api/runs", files={"files": ("tool.exe", b"MZ...", "application/octet-stream")}).status_code == 400

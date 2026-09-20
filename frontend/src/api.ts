@@ -150,7 +150,7 @@ export const api = {
     post<Escalation>(`/api/escalations/${id}/resolve`, body),
   retry: (runId: number, keys: string[] | null, actor: string) => post(`/api/runs/${runId}/retry`, { keys, actor }),
   rollback: (runId: number, keys: string[] | null, actor: string) => post(`/api/runs/${runId}/rollback`, { keys, actor }),
-  reset: () => post("/api/reset"),
+  reset: () => post("/api/reset?confirm=yes"),
   startSample: (sample: string) => {
     const fd = new FormData();
     fd.append("sample", sample);

@@ -4,342 +4,356 @@
   "name": "test_back_to_back_column_decisions",
   "label": "Back to back column decisions",
   "outcome": "pass",
-  "seconds": 9.069
+  "seconds": 8.107
  },
  {
   "file": "test_concurrency",
   "name": "test_second_fix_lands_before_push",
   "label": "Second fix lands before push",
   "outcome": "pass",
-  "seconds": 6.298
+  "seconds": 6.178
  },
  {
   "file": "test_end_to_end",
   "name": "test_full_migration_then_delta",
   "label": "Full migration then delta",
   "outcome": "pass",
-  "seconds": 12.842
+  "seconds": 11.613
  },
  {
   "file": "test_llm_boundary",
   "name": "test_llm_cannot_override_boundary",
   "label": "LLM cannot override boundary",
   "outcome": "pass",
-  "seconds": 5.935
+  "seconds": 4.941
  },
  {
   "file": "test_llm_fallback",
   "name": "test_primary_down_secondary_answers",
   "label": "Primary down secondary answers",
   "outcome": "pass",
-  "seconds": 1.261
+  "seconds": 1.388
  },
  {
   "file": "test_llm_fallback",
   "name": "test_failed_provider_is_skipped_during_cooldown",
   "label": "Failed provider is skipped during cooldown",
   "outcome": "pass",
-  "seconds": 0.025
+  "seconds": 0.031
  },
  {
   "file": "test_llm_fallback",
   "name": "test_garbage_output_falls_back",
   "label": "Garbage output falls back",
   "outcome": "pass",
-  "seconds": 0.031
+  "seconds": 0.021
  },
  {
   "file": "test_llm_fallback",
   "name": "test_json_generation_failure_is_one_off_not_an_outage",
   "label": "JSON generation failure is one off not an outage",
   "outcome": "pass",
-  "seconds": 0.026
+  "seconds": 0.033
  },
  {
   "file": "test_llm_fallback",
   "name": "test_invalid_model_400_is_treated_as_model_problem",
   "label": "Invalid model 400 is treated as model problem",
   "outcome": "pass",
-  "seconds": 0.029
+  "seconds": 0.021
  },
  {
   "file": "test_llm_fallback",
   "name": "test_answer_nested_in_prompt_echo_is_found",
   "label": "Answer nested in prompt echo is found",
   "outcome": "pass",
-  "seconds": 0.02
+  "seconds": 0.025
  },
  {
   "file": "test_llm_fallback",
   "name": "test_both_down_means_no_ai",
   "label": "Both down means no AI",
   "outcome": "pass",
-  "seconds": 0.028
+  "seconds": 0.024
  },
  {
   "file": "test_llm_fallback",
   "name": "test_recheck_recovers",
   "label": "Recheck recovers",
   "outcome": "pass",
-  "seconds": 0.034
+  "seconds": 0.031
  },
  {
   "file": "test_llm_fallback",
   "name": "test_run_without_any_ai_still_completes_and_says_so",
   "label": "Run without any AI still completes and says so",
   "outcome": "pass",
-  "seconds": 2.001
+  "seconds": 1.457
  },
  {
   "file": "test_llm_fallback",
   "name": "test_run_with_fallback_records_who_answered",
   "label": "Run with fallback records who answered",
   "outcome": "pass",
-  "seconds": 1.692
+  "seconds": 1.529
  },
  {
   "file": "test_resilience",
   "name": "test_transient_503s_are_retried_automatically",
   "label": "Transient 503s are retried automatically",
   "outcome": "pass",
-  "seconds": 5.888
+  "seconds": 5.119
  },
  {
   "file": "test_resilience",
   "name": "test_target_outage_fails_safely_and_retry_recovers",
   "label": "Target outage fails safely and retry recovers",
   "outcome": "pass",
-  "seconds": 8.419
+  "seconds": 7.069
  },
  {
   "file": "test_rules",
   "name": "test_rules_about_one_employee_cannot_be_added_by_hand",
   "label": "Rules about one employee cannot be added by hand",
   "outcome": "pass",
-  "seconds": 0.024
+  "seconds": 0.018
  },
  {
   "file": "test_rules",
   "name": "test_invalid_rules_are_rejected",
   "label": "Invalid rules are rejected",
   "outcome": "pass",
-  "seconds": 0.025
+  "seconds": 0.021
  },
  {
   "file": "test_rules",
   "name": "test_a_rule_the_data_already_decides_is_flagged_as_not_needed",
   "label": "A rule the data already decides is flagged as not needed",
   "outcome": "pass",
-  "seconds": 1.959
+  "seconds": 1.774
  },
  {
   "file": "test_rules",
   "name": "test_a_rule_overriding_the_evidence_must_be_acknowledged",
   "label": "A rule overriding the evidence must be acknowledged",
   "outcome": "pass",
-  "seconds": 1.919
+  "seconds": 1.876
  },
  {
   "file": "test_rules",
   "name": "test_a_useful_rule_is_recognised_with_its_real_impact",
   "label": "A useful rule is recognised with its real impact",
   "outcome": "pass",
-  "seconds": 6.222
+  "seconds": 5.649
  },
  {
   "file": "test_rules",
   "name": "test_a_date_rule_on_a_proven_column_is_flagged",
   "label": "A date rule on a proven column is flagged",
   "outcome": "pass",
-  "seconds": 2.092
+  "seconds": 1.558
  },
  {
   "file": "test_rules",
   "name": "test_a_manual_rule_takes_effect_on_the_next_run",
   "label": "A manual rule takes effect on the next run",
   "outcome": "pass",
-  "seconds": 11.602
+  "seconds": 9.797
  },
  {
   "file": "test_rules",
   "name": "test_ai_review_citations_are_checked_and_verdicts_sanitised",
   "label": "AI review citations are checked and verdicts sanitised",
   "outcome": "pass",
-  "seconds": 1.82
+  "seconds": 1.91
  },
  {
   "file": "test_rules",
   "name": "test_without_ai_the_review_is_the_data_checks_alone",
   "label": "Without AI the review is the data checks alone",
   "outcome": "pass",
-  "seconds": 1.526
+  "seconds": 1.963
  },
  {
   "file": "test_rules",
   "name": "test_only_a_reviewed_proposal_can_be_saved",
   "label": "Only a reviewed proposal can be saved",
   "outcome": "pass",
-  "seconds": 0.029
+  "seconds": 0.02
  },
  {
   "file": "test_rules",
   "name": "test_editing_a_rule_that_changed_since_review_is_refused",
   "label": "Editing a rule that changed since review is refused",
   "outcome": "pass",
-  "seconds": 5.006
+  "seconds": 5.278
  },
  {
   "file": "test_rules",
   "name": "test_rule_history_records_create_edit_delete",
   "label": "Rule history records create edit delete",
   "outcome": "pass",
-  "seconds": 5.281
+  "seconds": 5.033
  },
  {
   "file": "test_rules",
   "name": "test_remembering_a_typed_fix_is_specific_to_that_employee",
   "label": "Remembering a typed fix is specific to that employee",
   "outcome": "pass",
-  "seconds": 5.454
+  "seconds": 5.209
  },
  {
   "file": "test_rules",
   "name": "test_leave_empty_can_be_remembered_as_a_problem_rule_for_everyone",
   "label": "Leave empty can be remembered as a problem rule for everyone",
   "outcome": "pass",
-  "seconds": 9.17
+  "seconds": 9.609
  },
  {
   "file": "test_rules",
   "name": "test_problem_scope_is_refused_when_a_real_value_was_typed",
   "label": "Problem scope is refused when a real value was typed",
   "outcome": "pass",
-  "seconds": 5.092
+  "seconds": 5.265
  },
  {
   "file": "test_rules",
   "name": "test_required_fields_never_get_a_problem_rule",
   "label": "Required fields never get a problem rule",
   "outcome": "pass",
-  "seconds": 5.284
+  "seconds": 5.341
  },
  {
   "file": "test_rules",
   "name": "test_unknown_manager_rule_clears_the_manager_at_push_time",
   "label": "Unknown manager rule clears the manager at push time",
   "outcome": "pass",
-  "seconds": 10.332
+  "seconds": 10.407
  },
  {
   "file": "test_rules",
   "name": "test_an_old_exact_value_rule_can_be_made_generic",
   "label": "An old exact value rule can be made generic",
   "outcome": "pass",
-  "seconds": 0.129
+  "seconds": 0.102
  },
  {
   "file": "test_rules",
   "name": "test_problem_rule_review_shows_where_it_would_have_lost_data",
   "label": "Problem rule review shows where it would have lost data",
   "outcome": "pass",
-  "seconds": 5.316
+  "seconds": 6.397
  },
  {
   "file": "test_rules",
   "name": "test_problem_rule_review_finds_cases_on_cards_from_older_versions",
   "label": "Problem rule review finds cases on cards from older versions",
   "outcome": "pass",
-  "seconds": 5.047
+  "seconds": 8.112
  },
  {
   "file": "test_rules",
   "name": "test_empty_values_are_described_as_leave_empty",
   "label": "Empty values are described as leave empty",
   "outcome": "pass",
-  "seconds": 5.105
+  "seconds": 9.412
  },
  {
   "file": "test_rules",
   "name": "test_conflict_other_value_needs_a_valid_value_and_a_note",
   "label": "Conflict other value needs a valid value and a note",
   "outcome": "pass",
-  "seconds": 5.224
+  "seconds": 6.437
  },
  {
   "file": "test_security",
   "name": "test_conflict_value_must_be_one_of_the_offered_options",
   "label": "Conflict value must be one of the offered options",
   "outcome": "pass",
-  "seconds": 5.021
+  "seconds": 5.516
  },
  {
   "file": "test_security",
   "name": "test_correction_cannot_change_fields_the_card_did_not_offer",
   "label": "Correction cannot change fields the card did not offer",
   "outcome": "pass",
-  "seconds": 4.934
+  "seconds": 5.159
  },
  {
   "file": "test_security",
   "name": "test_skip_is_only_accepted_where_it_was_offered",
   "label": "Skip is only accepted where it was offered",
   "outcome": "pass",
-  "seconds": 5.089
+  "seconds": 5.508
  },
  {
   "file": "test_security",
   "name": "test_a_decision_cannot_be_applied_twice",
   "label": "A decision cannot be applied twice",
   "outcome": "pass",
-  "seconds": 1.418
+  "seconds": 1.647
  },
  {
   "file": "test_security",
   "name": "test_prompt_injection_in_headers_and_cells_cannot_steer_the_migration",
   "label": "Prompt injection in headers and cells cannot steer the migration",
   "outcome": "pass",
-  "seconds": 6.481
+  "seconds": 6.835
  },
  {
   "file": "test_security",
   "name": "test_ai_answers_outside_the_schema_are_ignored",
   "label": "AI answers outside the schema are ignored",
   "outcome": "pass",
-  "seconds": 0.066
+  "seconds": 0.071
  },
  {
   "file": "test_security",
   "name": "test_spreadsheet_formulas_in_client_data_are_held_for_review",
   "label": "Spreadsheet formulas in client data are held for review",
   "outcome": "pass",
-  "seconds": 4.961
+  "seconds": 5.111
  },
  {
   "file": "test_security",
   "name": "test_audit_csv_export_neutralises_formulas",
   "label": "Audit CSV export neutralises formulas",
   "outcome": "pass",
-  "seconds": 1.445
+  "seconds": 1.5
  },
  {
   "file": "test_security",
   "name": "test_xml_bomb_excel_file_is_rejected_and_the_run_continues",
   "label": "XML bomb excel file is rejected and the run continues",
   "outcome": "pass",
-  "seconds": 0.987
+  "seconds": 1.106
  },
  {
   "file": "test_security",
   "name": "test_upload_paths_are_confined_to_the_run_folder",
   "label": "Upload paths are confined to the run folder",
   "outcome": "pass",
-  "seconds": 0.432
+  "seconds": 0.438
+ },
+ {
+  "file": "test_security",
+  "name": "test_reset_needs_an_explicit_confirmation",
+  "label": "Reset needs an explicit confirmation",
+  "outcome": "pass",
+  "seconds": 1.588
+ },
+ {
+  "file": "test_security",
+  "name": "test_public_demo_can_limit_how_many_migrations_one_visitor_starts",
+  "label": "Public demo can limit how many migrations one visitor starts",
+  "outcome": "pass",
+  "seconds": 0.828
  },
  {
   "file": "test_security",
   "name": "test_uploads_are_type_and_size_limited",
   "label": "Uploads are type and size limited",
   "outcome": "pass",
-  "seconds": 0.039
+  "seconds": 0.043
  }
 ]

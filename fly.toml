@@ -1,0 +1,33 @@
+# Fly.io deployment. See HOSTING.md for the full walkthrough.
+app = "migration-agent"
+primary_region = "sin"   # Singapore - closest to India; change if you prefer
+
+[build]
+
+[env]
+  PORT = "8080"
+  AGENT_DB = "/data/agent.db"
+  TARGET_DB = "/data/target.db"
+  RUNS_DIR = "/data/runs"
+  AGENT_STEP_DELAY = "0.35"
+  MAX_RUNS_PER_HOUR = "20"   # public demo guard; 0 = unlimited
+
+[[mounts]]
+  source = "migration_data"
+  destination = "/data"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = false   # keep it warm: a reviewer's first click shouldn't wait for a cold start
+  auto_start_machines = true
+  min_machines_running = 1
+  # Run state and the live feed live in the process, so exactly one instance.
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 50
+    hard_limit = 100
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"

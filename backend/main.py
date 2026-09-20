@@ -141,8 +141,26 @@ def safe_filename(raw: str | None) -> str:
     return name
 
 
+_starts: dict[str, list[float]] = collections.defaultdict(list)
+
+
+def _rate_limit(request: Request) -> None:
+    """Public demo guard: stops one visitor from starting endless migrations. Off by default (local use)."""
+    if not config.MAX_RUNS_PER_HOUR:
+        return
+    who = (request.headers.get("x-forwarded-for", "").split(",")[0].strip()
+           or (request.client.host if request.client else "?"))
+    now = db.now()
+    recent = [t for t in _starts[who] if now - t < 3600]
+    if len(recent) >= config.MAX_RUNS_PER_HOUR:
+        raise HTTPException(429, f"This demo allows {config.MAX_RUNS_PER_HOUR} migrations per hour. Try again later, "
+                                 "or run it locally - see the README.")
+    _starts[who] = recent + [now]
+
+
 @app.post("/api/runs")
-async def create_run(sample: str | None = Form(None), files: list[UploadFile] | None = File(None)):
+async def create_run(request: Request, sample: str | None = Form(None), files: list[UploadFile] | None = File(None)):
+    _rate_limit(request)
     if not sample and not files:
         raise HTTPException(400, "Choose a sample dataset or upload at least one CSV/Excel file")
     if sample and sample not in SAMPLES:  # never treat user input as a path
@@ -418,8 +436,10 @@ def target_status():
 
 
 @app.post("/api/reset")
-def reset_everything():
+def reset_everything(confirm: str = ""):
     """Demo helper: clear runs, learned rules and the target system (re-seeded)."""
+    if confirm != "yes":   # a stray POST must not wipe a demo someone else is watching
+        raise HTTPException(400, "Add confirm=yes to reset the demo")
     db.reset_all()
     shutil.rmtree(config.RUNS_DIR, ignore_errors=True)
     get_client().client.post("/admin/reset")

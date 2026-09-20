@@ -13,24 +13,36 @@ questions in one click, and see an audit trail of everything that happened.
 
 ## Quick start
 
-Requirements: Python 3.11+, Node 18+ (only to build the UI).
+**Requirements: Python 3.11+. Nothing else** - the built UI is in the repo, so there is no Node build step.
+
+```bash
+powershell -ExecutionPolicy Bypass -File run.ps1     # Windows
+```
+
+```bash
+bash run.sh                                          # macOS / Linux
+```
+
+That creates the virtual environment, installs the dependencies and starts the app. Or do it by hand:
 
 ```bash
 python -m venv .venv
 .venv\Scripts\activate            # macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
-
-copy .env.example .env            # macOS/Linux: cp .env.example .env  -> add a free Groq key (optional)
-
-cd frontend && npm install && npm run build && cd ..
 python -m uvicorn backend.main:app --port 8000
 ```
 
-Open **http://localhost:8000** → *Start a migration* → *Sample client export (first extract)*.
+Open **http://localhost:8000** → *New migration* → *Sample client export (first extract)*.
+
+**An API key is optional.** Without one the agent runs in rules-only mode and says so in the header. To switch AI
+on, copy `.env.example` to `.env` and add a free [Groq](https://console.groq.com/keys) key.
+
+To host it for others, see **[HOSTING.md](HOSTING.md)**.
 
 - **No API key, or every AI provider down?** Everything still works in *rules-only mode*. The agent then uses
   header and value evidence only, and makes no AI suggestions. The UI says clearly that no AI is involved.
-- **UI development:** run `npm run dev` in `frontend/` (http://localhost:5173, proxies `/api` to :8000).
+- **UI development:** `cd frontend && npm install && npm run dev` (http://localhost:5173, proxies `/api` to :8000).
+  After changing the UI, run `npm run build` so the committed `frontend/dist` stays in step.
 - **Tests:** `python -m pytest -q` runs every suite: end-to-end, security, resilience, AI fallback and
   concurrency.
 - **Evaluation:** `python -m evals.run` scores the agent against ground truth on the canonical dataset and 15

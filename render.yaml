@@ -1,0 +1,25 @@
+# Render deployment (alternative to Fly). See HOSTING.md.
+services:
+  - type: web
+    name: migration-agent
+    runtime: docker
+    plan: starter          # free spins down when idle; starter (~$7/mo) stays warm
+    numInstances: 1        # run state and the live feed live in the process
+    healthCheckPath: /api/health
+    disk:
+      name: migration-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: AGENT_DB
+        value: /data/agent.db
+      - key: TARGET_DB
+        value: /data/target.db
+      - key: RUNS_DIR
+        value: /data/runs
+      - key: MAX_RUNS_PER_HOUR
+        value: "20"
+      - key: GROQ_API_KEY
+        sync: false        # set it in the dashboard - never commit a key
+      - key: OPENROUTER_API_KEY
+        sync: false
