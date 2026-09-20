@@ -3,8 +3,8 @@ title: Migration Agent
 emoji: 🔀
 colorFrom: indigo
 colorTo: blue
-sdk: docker
-app_port: 7860
+sdk: gradio
+app_file: app.py
 pinned: false
 short_description: An AI agent that migrates messy HR exports, and asks a human only when the data can't decide
 ---
@@ -17,7 +17,7 @@ cleans and combines the records, and pushes them to the new platform's API **on 
 only when the data genuinely can't answer the question.
 
 **Try it:** *New migration → Sample client export (first extract)*. It pauses on the two questions the data can't
-settle, then pushes the rest. Resolve a card and watch the record flow through. Then run the *re-export* to see it
+settle, then pushes the rest. Resolve a card and watch that record flow through. Then run the *re-export* to see it
 apply what it learned and send only what changed.
 
 - Source, evaluation and write-up: https://github.com/umesh-chowdary-tech/ai-data-migration-agent

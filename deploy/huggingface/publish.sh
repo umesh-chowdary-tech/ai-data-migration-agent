@@ -19,8 +19,8 @@ git clone "https://huggingface.co/spaces/$SPACE" "$WORK"
 
 find "$WORK" -mindepth 1 -maxdepth 1 -not -name .git -exec rm -rf {} +
 git archive HEAD | tar -x -C "$WORK"
-cp deploy/huggingface/Dockerfile "$WORK/Dockerfile"
-cp deploy/huggingface/README.md "$WORK/README.md"
+cp deploy/huggingface/README.md "$WORK/README.md"   # the Space card (sdk + app_file)
+rm -f "$WORK/Dockerfile"                            # a Gradio Space must not see a Dockerfile
 
 git -C "$WORK" add -A
 git -C "$WORK" commit -q -m "$MESSAGE"

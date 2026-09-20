@@ -91,7 +91,8 @@ def samples():
     for key, label in SAMPLES.items():
         folder = config.SAMPLES_DIR / key
         if folder.exists():
-            out.append({"id": key, "label": label, "files": sorted(p.name for p in folder.iterdir())})
+            out.append({"id": key, "label": label,
+                        "files": sorted(p.name for p in folder.iterdir() if p.suffix.lower() in ALLOWED_SUFFIXES)})
     return out
 
 
@@ -455,6 +456,8 @@ if config.FRONTEND_DIST.exists():
 
     @app.get("/{path:path}", include_in_schema=False)
     def spa(path: str):
+        if path.startswith(("gradio", "theme.css", "gradio_api")):   # anything mounted after this route
+            raise HTTPException(404, "not found")
         candidate = config.FRONTEND_DIST / path
         if path and candidate.is_file():
             return FileResponse(candidate)

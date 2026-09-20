@@ -27,9 +27,9 @@ git archive HEAD --format=zip -o $zip
 Expand-Archive -Path $zip -DestinationPath $work -Force
 Remove-Item $zip
 
-# The Space needs its own Dockerfile (port 7860, non-root) and README (the Space card)
-Copy-Item "$repo\deploy\huggingface\Dockerfile" "$work\Dockerfile" -Force
+# The Space needs its own README (the Space card: sdk + app_file). app.py and the built UI are already in the repo.
 Copy-Item "$repo\deploy\huggingface\README.md" "$work\README.md" -Force
+Remove-Item "$work\Dockerfile" -Force -ErrorAction SilentlyContinue   # a Gradio Space must not see a Dockerfile
 
 git -C $work add -A
 git -C $work commit -q -m $Message

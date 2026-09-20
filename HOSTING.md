@@ -6,10 +6,12 @@ run state and the live activity feed live in the process.
 
 ## Hugging Face Spaces (free, no card)
 
-Best if you just want a link to share. Free Spaces have **no persistent disk**, so runs and learned rules reset when
-the Space restarts - fine for a demo, since the sample data ships in the image.
+Best if you just want a link to share. Uses the **Gradio SDK**, which is free (Docker Spaces are a paid tier). The
+Space runs [`app.py`](app.py), which serves this app's own UI and API - no build step, because `frontend/dist` is
+committed. Free Spaces have **no persistent disk**, so runs and learned rules reset when the Space restarts. That's
+fine for a demo: the sample data ships with the code.
 
-1. Create an account at huggingface.co, then **New Space** → name it, **SDK: Docker**, **Blank** template, public.
+1. Create an account at huggingface.co, then **New Space** → name it, **SDK: Gradio**, **Blank** template, public.
 2. Create a **write** access token: Settings → Access Tokens.
 3. Publish this repo into it (only committed files are published):
 
@@ -19,13 +21,15 @@ the Space restarts - fine for a demo, since the sample data ships in the image.
    ```
 
    Git asks for your username and the token (use the token as the password).
-4. In the Space: **Settings → Variables and secrets** → add `GROQ_API_KEY` and `OPENROUTER_API_KEY` as **secrets**.
-   Without them the app still runs and says "No AI involved".
-5. Watch **Logs** until the build finishes (a few minutes), then open the Space.
+4. In the Space: **Settings → Variables and secrets** → add `GROQ_API_KEY` and `OPENROUTER_API_KEY` as **secrets**,
+   and `MAX_RUNS_PER_HOUR = 20` as a variable. Without the keys the app still runs and says "No AI involved".
+5. Watch **Logs** until it says `Uvicorn running`, then open the Space.
 
-Re-publishing later is the same one command. The Space uses its own
-[`deploy/huggingface/Dockerfile`](deploy/huggingface/Dockerfile) (port 7860, non-root user) and
-[`README.md`](deploy/huggingface/README.md) (the Space card).
+Re-publishing later is the same one command. The Space card lives in
+[`deploy/huggingface/README.md`](deploy/huggingface/README.md); the script copies it over the project README.
+
+If you ever upgrade to a Docker Space (paid), use [`deploy/huggingface/Dockerfile`](deploy/huggingface/Dockerfile)
+instead and set the SDK to `docker`.
 
 ## Fly.io (stays warm, keeps its data, ~$0-5/month)
 
