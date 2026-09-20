@@ -1,25 +1,26 @@
-# Render deployment (alternative to Fly). See HOSTING.md.
+# Render deployment. See HOSTING.md.
+#
+# The free plan has no persistent disk, so runs and learned rules reset when the service restarts - fine for a demo,
+# since the sample data ships with the code. For data that survives restarts, switch to the starter plan and add the
+# disk block below.
 services:
   - type: web
     name: migration-agent
     runtime: docker
-    plan: starter          # free spins down when idle; starter (~$7/mo) stays warm
+    plan: free
     numInstances: 1        # run state and the live feed live in the process
     healthCheckPath: /api/health
-    disk:
-      name: migration-data
-      mountPath: /data
-      sizeGB: 1
     envVars:
-      - key: AGENT_DB
-        value: /data/agent.db
-      - key: TARGET_DB
-        value: /data/target.db
-      - key: RUNS_DIR
-        value: /data/runs
       - key: MAX_RUNS_PER_HOUR
         value: "20"
       - key: GROQ_API_KEY
         sync: false        # set it in the dashboard - never commit a key
       - key: OPENROUTER_API_KEY
         sync: false
+    # Paid plan only - persistent data:
+    # plan: starter
+    # disk:
+    #   name: migration-data
+    #   mountPath: /data
+    #   sizeGB: 1
+    # envVars also need AGENT_DB=/data/agent.db, TARGET_DB=/data/target.db, RUNS_DIR=/data/runs

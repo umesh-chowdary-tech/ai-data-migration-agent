@@ -1,12 +1,12 @@
 ---
-title: Migration Agent
+title: HR Migration Agent
 emoji: 🔀
 colorFrom: indigo
 colorTo: blue
 sdk: gradio
 app_file: app.py
 pinned: false
-short_description: An AI agent that migrates messy HR exports, and asks a human only when the data can't decide
+short_description: HR data migration agent with a human in the loop
 ---
 
 # Migration Agent

@@ -4,14 +4,21 @@ The app is one container: a FastAPI server that serves the built UI, the agent, 
 keeps its data in files (SQLite + uploaded run files), so give it a small persistent disk and run **one** instance -
 run state and the live activity feed live in the process.
 
-## Hugging Face Spaces (free, no card)
+## Render (free plan, no card)
 
-Best if you just want a link to share. Uses the **Gradio SDK**, which is free (Docker Spaces are a paid tier). The
-Space runs [`app.py`](app.py), which serves this app's own UI and API - no build step, because `frontend/dist` is
-committed. Free Spaces have **no persistent disk**, so runs and learned rules reset when the Space restarts. That's
-fine for a demo: the sample data ships with the code.
+Push the repo, then in Render: **New → Blueprint** → pick this repo → it reads `render.yaml`. Set `GROQ_API_KEY`
+and `OPENROUTER_API_KEY` in the dashboard. The free plan has no persistent disk and spins the service down when it
+goes unused, so the first click after a long idle waits while it wakes.
 
-1. Create an account at huggingface.co, then **New Space** → name it, **SDK: Gradio**, **Blank** template, public.
+## Hugging Face Spaces (needs PRO)
+
+**Only static Spaces are free.** Gradio and Docker Spaces on free `cpu-basic` hardware require a PRO subscription
+(~$9/month), and ZeroGPU hardware refuses to run anything that isn't a GPU Gradio app
+(`No @spaces.GPU function detected`). With PRO it works well: the Space runs [`app.py`](app.py), which serves this
+app's UI and API with no build step, because `frontend/dist` is committed.
+
+1. Create an account at huggingface.co, then **New Space** → name it, **SDK: Gradio**, **Blank** template, public,
+   hardware **CPU basic** (needs PRO).
 2. Create a **write** access token: Settings → Access Tokens.
 3. Publish this repo into it (only committed files are published):
 
