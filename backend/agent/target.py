@@ -1,6 +1,7 @@
 """HTTP client for the target platform API (the stub by default)."""
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from typing import Any, Callable
 
@@ -59,8 +60,22 @@ class TargetClient:
         return self._call("DELETE", f"/employees/{emp_id}")
 
 
-# Tests swap this factory for one that returns a client bound to the in-process mock app.
-factory: Callable[[], TargetClient] = TargetClient
+def _default_client() -> TargetClient:
+    """No TARGET_API_URL configured: talk to the mock target mounted in this process.
+
+    That keeps the agent independent of the port the server happens to run on (and of the network entirely),
+    while still going through the same HTTP request/response path.
+    """
+    if os.getenv("TARGET_API_URL"):
+        return TargetClient()
+    from starlette.testclient import TestClient
+
+    from mock_api.app import app as mock_app
+    return TargetClient(TestClient(mock_app))
+
+
+# Tests swap this factory for one that returns a client bound to their own mock app instance.
+factory: Callable[[], TargetClient] = _default_client
 
 
 def get_client() -> TargetClient:

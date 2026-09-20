@@ -17,10 +17,9 @@ DB_PATH = pathlib.Path(os.getenv("AGENT_DB", ROOT / "var" / "agent.db"))
 TARGET_DB_PATH = pathlib.Path(os.getenv("TARGET_DB", ROOT / "var" / "target.db"))
 FRONTEND_DIST = ROOT / "frontend" / "dist"
 
-# Where the "push to target" step sends records. Default: the stub API mounted in this same server, on whatever
-# port it was started with (hosting platforms assign one through $PORT).
-PORT = os.getenv("PORT", "8000")
-TARGET_API_URL = os.getenv("TARGET_API_URL", f"http://127.0.0.1:{PORT}/target-api")
+# Where the "push to target" step sends records. Unset (the default) means the stub mounted in this same process,
+# so the agent doesn't care which port the server runs on. Set it to point at a real target API.
+TARGET_API_URL = os.getenv("TARGET_API_URL", "in-process stub (mounted at /target-api)")
 
 # Public demo guards (0 = unlimited). Keep a shared link usable without a login.
 MAX_RUNS_PER_HOUR = int(os.getenv("MAX_RUNS_PER_HOUR", "0"))

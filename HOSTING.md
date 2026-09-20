@@ -33,7 +33,8 @@ docker run -p 8080:8080 -v migration-data:/data \
 | Variable | Why |
 |---|---|
 | `AGENT_DB`, `TARGET_DB`, `RUNS_DIR` | point at the mounted disk, or the demo resets on every restart |
-| `PORT` | the agent calls its own mock target API, so it must know the port it runs on |
+| `PORT` | the port the server binds to (platforms assign one). The agent reaches its mock target in-process, so no extra wiring |
+| `TARGET_API_URL` | only if you point the push step at a real API instead of the built-in stub |
 | `GROQ_API_KEY`, `OPENROUTER_API_KEY` | AI suggestions. Without them the app runs fine and says "No AI involved" |
 | `MAX_RUNS_PER_HOUR` | public-demo guard: migrations startable per visitor per hour (0 = unlimited) |
 | `AGENT_STEP_DELAY` | pacing so a human can watch the feed; 0 = full speed |
