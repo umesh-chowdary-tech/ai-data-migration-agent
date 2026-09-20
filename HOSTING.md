@@ -4,7 +4,30 @@ The app is one container: a FastAPI server that serves the built UI, the agent, 
 keeps its data in files (SQLite + uploaded run files), so give it a small persistent disk and run **one** instance -
 run state and the live activity feed live in the process.
 
-## Fly.io (recommended: stays warm, small volume, ~$0-5/month)
+## Hugging Face Spaces (free, no card)
+
+Best if you just want a link to share. Free Spaces have **no persistent disk**, so runs and learned rules reset when
+the Space restarts - fine for a demo, since the sample data ships in the image.
+
+1. Create an account at huggingface.co, then **New Space** → name it, **SDK: Docker**, **Blank** template, public.
+2. Create a **write** access token: Settings → Access Tokens.
+3. Publish this repo into it (only committed files are published):
+
+   ```bash
+   powershell -ExecutionPolicy Bypass -File deploy\huggingface\publish.ps1 -Space <user>/<space>   # Windows
+   bash deploy/huggingface/publish.sh <user>/<space>                                               # macOS / Linux
+   ```
+
+   Git asks for your username and the token (use the token as the password).
+4. In the Space: **Settings → Variables and secrets** → add `GROQ_API_KEY` and `OPENROUTER_API_KEY` as **secrets**.
+   Without them the app still runs and says "No AI involved".
+5. Watch **Logs** until the build finishes (a few minutes), then open the Space.
+
+Re-publishing later is the same one command. The Space uses its own
+[`deploy/huggingface/Dockerfile`](deploy/huggingface/Dockerfile) (port 7860, non-root user) and
+[`README.md`](deploy/huggingface/README.md) (the Space card).
+
+## Fly.io (stays warm, keeps its data, ~$0-5/month)
 
 ```bash
 fly auth login

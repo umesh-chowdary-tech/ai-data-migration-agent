@@ -37,7 +37,8 @@ Open **http://localhost:8000** → *New migration* → *Sample client export (fi
 **An API key is optional.** Without one the agent runs in rules-only mode and says so in the header. To switch AI
 on, copy `.env.example` to `.env` and add a free [Groq](https://console.groq.com/keys) key.
 
-To host it for others, see **[HOSTING.md](HOSTING.md)**.
+To put it online for others (free on Hugging Face Spaces, or Fly / Render / any Docker host), see
+**[HOSTING.md](HOSTING.md)**.
 
 - **No API key, or every AI provider down?** Everything still works in *rules-only mode*. The agent then uses
   header and value evidence only, and makes no AI suggestions. The UI says clearly that no AI is involved.
